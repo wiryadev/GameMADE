@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_game_controller"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_shooting_game_target"
+        android:title="@string/title_search" />
+
+    <item
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_game_mini_disc"
+        android:title="@string/title_library" />
+
+
+</menu>
