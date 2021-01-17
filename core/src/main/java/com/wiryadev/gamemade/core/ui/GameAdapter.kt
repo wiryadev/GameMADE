@@ -12,17 +12,12 @@ import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
 class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
 
     private var listData = ArrayList<Game>()
-    private var onItemClickCallback: OnItemClickCallback? = null
 
     fun setData(newListData: List<Game>?) {
         if (newListData == null) return
         listData.clear()
         listData.addAll(newListData)
         notifyDataSetChanged()
-    }
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
@@ -36,7 +31,7 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
 
     override fun getItemCount(): Int = listData.size
 
-    class RecyclerViewHolder(private val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RecyclerViewHolder(private val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Game) {
             with(binding) {
                 ivPoster.load(data.bgImage) {
@@ -44,15 +39,23 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
                 }
 
                 tvTitle.text = data.title
-                tvMetacritic.text = data.metacritic.toString()
+
+                val rating = data.metacritic ?: "N/A"
+                tvMetacritic.text = rating.toString()
 
                 val releaseDate = "Released: ${data.released ?: ("TBA")}"
                 tvRelease.text = releaseDate
+
+                root.setOnClickListener {
+                    onItemClickListener?.let { it(data.id) }
+                }
             }
         }
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(data: Game)
+    private var onItemClickListener: ((Int) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (Int) -> Unit) {
+        onItemClickListener = listener
     }
 }
