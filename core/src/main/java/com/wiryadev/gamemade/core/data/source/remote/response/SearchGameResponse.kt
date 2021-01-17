@@ -7,7 +7,7 @@ data class SearchGameResponse(
     var count: Int,
 
     @field:SerializedName("next")
-    var next: Int,
+    var next: String?,
 
     @field:SerializedName("previous")
     var previous: String?,

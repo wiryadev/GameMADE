@@ -3,11 +3,10 @@
 
     <stroke
         android:width="2dp"
-        android:color="@color/design_default_color_secondary_variant"
+        android:color="@color/design_default_color_primary"
         />
 
     <corners
-        android:radius="6dp"
+        android:radius="12dp"
         />
-
 </shape>

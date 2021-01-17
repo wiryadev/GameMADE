@@ -8,7 +8,7 @@ interface IGameRepository {
 
     fun getGameList(): Flow<Resource<List<Game>>>
 
-    fun searchGame(search: String): Flow<Resource<List<Game>>>
+    suspend fun searchGame(search: String): Resource<List<Game>>
 
     fun getGameLibraries(): Flow<List<Game>>
 

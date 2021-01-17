@@ -1,5 +1,6 @@
 package com.wiryadev.gamemade.core.data
 
+import android.util.Log
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
@@ -13,8 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class GameRepository @Inject constructor(
-        private val remoteDataSource: RemoteDataSource,
-        private val localDataSource: LocalDataSource,
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
 ) : IGameRepository {
 
     override fun getGameList(): Flow<Resource<List<Game>>> {
@@ -40,20 +41,17 @@ class GameRepository @Inject constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun searchGame(search: String): Flow<Resource<List<Game>>> {
-        return flow {
-            emit(Resource.Loading())
-            when (val apiResponse = remoteDataSource.searchGame(search).first()) {
-                is ApiResponse.Success -> {
-                    val result = DataMapper.mapResponseToDomain(apiResponse.data) as Flow<List<Game>>
-                    emitAll(result.map { Resource.Success(it) })
-                }
-                is ApiResponse.Empty -> {
-                    emit(Resource.Error<List<Game>>(apiResponse.toString()))
-                }
-                is ApiResponse.Error -> {
-                    emit(Resource.Error<List<Game>>(apiResponse.errorMessage))
-                }
+    override suspend fun searchGame(search: String): Resource<List<Game>> {
+        return when (val apiResponse = remoteDataSource.searchGame(search).first()) {
+            is ApiResponse.Success -> {
+                val result = DataMapper.mapResponseToDomain(apiResponse.data)
+                Resource.Success(result)
+            }
+            is ApiResponse.Empty -> {
+                Resource.Error(apiResponse.toString())
+            }
+            is ApiResponse.Error -> {
+                Resource.Error(apiResponse.errorMessage)
             }
         }
     }
