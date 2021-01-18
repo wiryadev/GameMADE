@@ -16,7 +16,7 @@ data class GameResponse(
     var metacritic: Int? = null,
 
     @field:SerializedName("metacritic_url")
-    var metacriticUrl: Int? = null,
+    var metacriticUrl: String? = null,
 
     @field:SerializedName("background_image")
     var bgImage: String? = null,

@@ -62,9 +62,14 @@ class GameRepository @Inject constructor(
         }
     }
 
-    override fun getDetailGame(id: Int): Flow<Resource<Game>> {
-        return flow {
-            remoteDataSource.getDetailGame(id)
+    override suspend fun getDetailGame(id: Int): Flow<Resource<Game>> {
+        Log.d("Repo", "getDetailGame: called")
+        return remoteDataSource.getDetailGame(id).map {
+            when (it) {
+                is ApiResponse.Success -> Resource.Success(DataMapper.mapDetailResponseToDomain(it.data))
+                is ApiResponse.Empty -> Resource.Error(it.toString())
+                is ApiResponse.Error -> Resource.Error(it.errorMessage)
+            }
         }
     }
 

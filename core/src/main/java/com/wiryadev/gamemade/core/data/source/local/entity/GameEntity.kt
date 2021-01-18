@@ -22,7 +22,7 @@ data class GameEntity(
     var metacritic: Int? = null,
 
     @ColumnInfo(name = "metacritic_url")
-    var metacriticUrl: Int? = null,
+    var metacriticUrl: String? = null,
 
     @ColumnInfo(name = "bg_image")
     var bgImage: String? = null,

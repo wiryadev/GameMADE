@@ -31,6 +31,18 @@ object DataMapper {
         }
     }
 
+    fun mapDetailResponseToDomain(input: GameResponse): Game {
+        return Game(
+            id = input.id,
+            title = input.title,
+            released = input.released,
+            metacritic = input.metacritic,
+            metacriticUrl = input.metacriticUrl,
+            bgImage = input.bgImage,
+            gameSeriesCount = input.gameSeriesCount
+        )
+    }
+
     fun mapCacheEntitiesToDomain(input: List<GameCacheEntity>): List<Game> {
         return input.map {
             Game(

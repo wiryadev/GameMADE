@@ -52,6 +52,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     suspend fun getDetailGame(id: Int): Flow<ApiResponse<GameResponse>> =
         flow {
             try {
+                Log.d(TAG, "getDetailGame: called")
                 val response = apiService.getDetailGame(id)
                 if (response != null) {
                     emit(ApiResponse.Success(response))
@@ -60,7 +61,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))
-                Log.e(TAG, "getGameList: ${ex.message} ")
+                Log.e(TAG, "getDetailGame: ${ex.message} ")
             }
         }.flowOn(Dispatchers.IO)
 

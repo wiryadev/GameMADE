@@ -1,6 +1,7 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
 import com.wiryadev.gamemade.core.data.Resource
+import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
 import com.wiryadev.gamemade.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ interface GameUseCase {
 
     fun getGameLibraries(): Flow<List<Game>>
 
-    fun getDetailGame(id: Int): Flow<Resource<Game>>
+    suspend fun getDetailGame(id: Int): Flow<Resource<Game>>
 
     fun checkFavorite(id: Int): Flow<Int>
 

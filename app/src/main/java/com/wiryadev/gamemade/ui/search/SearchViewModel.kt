@@ -21,11 +21,10 @@ class SearchViewModel @ViewModelInject constructor(private val useCase: GameUseC
 
     val searchResult = queryChannel.asFlow()
         .debounce(debounceDuration.toLong())
-        .distinctUntilChanged()
         .filter {
             it.trim().isNotEmpty()
         }
-        .map {
+        .mapLatest {
             useCase.searchGame(it)
         }
         .asLiveData(viewModelScope.coroutineContext)
