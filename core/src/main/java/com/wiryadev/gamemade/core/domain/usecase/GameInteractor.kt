@@ -18,16 +18,14 @@ class GameInteractor @Inject constructor(private val gameRepository: GameReposit
 
     override suspend fun getDetailGame(id: Int) = gameRepository.getDetailGame(id)
 
-    override fun checkFavorite(id: Int): Flow<Int> {
-        TODO("Not yet implemented")
-    }
+    override fun checkFavorite(id: Int): Flow<Int> = gameRepository.checkFavorite(id)
 
     override suspend fun insertGameToLibrary(game: Game) {
-        TODO("Not yet implemented")
+        gameRepository.insertGameToLibrary(game)
     }
 
     override suspend fun deleteGameFromLibrary(game: Game) {
-        TODO("Not yet implemented")
+        gameRepository.deleteGameFromLibrary(game)
     }
 
 }

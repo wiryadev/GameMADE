@@ -77,7 +77,8 @@ class HomeFragment : Fragment() {
                     }
                     is Resource.Error -> {
                         this?.progressBar?.gone()
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        this?.viewError?.root?.visible()
+                        this?.viewError?.tvError?.text = it.message ?: getString(R.string.default_error_message)
                     }
                 }
             })

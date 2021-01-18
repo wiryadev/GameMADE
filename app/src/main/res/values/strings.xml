@@ -8,4 +8,7 @@
     <string name="home">Home</string>
     <string name="search_game">Search Game</string>
     <string name="title_favorite">Favorite</string>
+    <string name="error">Error</string>
+    <string name="default_error_message">Oops, something went wrong</string>
+    <string name="favorite_button">Favorite Button</string>
 </resources>

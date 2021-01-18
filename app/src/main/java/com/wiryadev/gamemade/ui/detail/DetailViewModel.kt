@@ -27,4 +27,14 @@ class DetailViewModel @ViewModelInject constructor(private val useCase: GameUseC
             .asLiveData()
     }
 
+    fun checkFavorite(id: Int) = useCase.checkFavorite(id).asLiveData()
+
+    fun insertGameToLibrary(game: Game) = viewModelScope.launch {
+        useCase.insertGameToLibrary(game)
+    }
+
+    fun deleteGameFromLibrary(game: Game) = viewModelScope.launch {
+        useCase.deleteGameFromLibrary(game)
+    }
+
 }

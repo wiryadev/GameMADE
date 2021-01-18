@@ -74,19 +74,18 @@ class GameRepository @Inject constructor(
     }
 
     override fun checkFavorite(id: Int): Flow<Int> {
-        return flow {
-            localDataSource.checkFavorite(id)
-        }
+        return localDataSource.checkFavorite(id)
     }
 
     override suspend fun insertGameToLibrary(game: Game) {
-        return localDataSource.insertGameToLibrary(
+        Log.d("Repo", "insertGameToLibrary: called")
+        localDataSource.insertGameToLibrary(
             DataMapper.mapDomainToEntity(game)
         )
     }
 
     override suspend fun deleteGameFromLibrary(game: Game) {
-        return localDataSource.deleteGameFromLibrary(
+        localDataSource.deleteGameFromLibrary(
             DataMapper.mapDomainToEntity(game)
         )
     }
