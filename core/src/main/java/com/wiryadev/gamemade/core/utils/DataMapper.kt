@@ -39,6 +39,7 @@ object DataMapper {
             metacritic = input.metacritic,
             metacriticUrl = input.metacriticUrl,
             bgImage = input.bgImage,
+            description = input.description,
             gameSeriesCount = input.gameSeriesCount
         )
     }
@@ -77,6 +78,7 @@ object DataMapper {
             metacritic = input.metacritic,
             metacriticUrl = input.metacriticUrl,
             bgImage = input.bgImage,
+            description = input.description,
             gameSeriesCount = input.gameSeriesCount
         )
     }

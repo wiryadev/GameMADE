@@ -21,7 +21,7 @@ data class GameResponse(
     @field:SerializedName("background_image")
     var bgImage: String? = null,
 
-    @field:SerializedName("description")
+    @field:SerializedName("description_raw")
     var description: String? = null,
 
     @field:SerializedName("game_series_count")
