@@ -86,6 +86,7 @@ class DetailFragment : Fragment() {
                             if (detailGame != null) {
                                 game = detailGame
                                 showDetail(game)
+                                this?.contentDetail?.tvAbout?.visible()
                                 this?.floatingActionButton?.visible()
                             }
                         }

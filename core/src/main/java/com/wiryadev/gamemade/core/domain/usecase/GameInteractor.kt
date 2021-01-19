@@ -12,9 +12,7 @@ class GameInteractor @Inject constructor(private val gameRepository: GameReposit
 
     override suspend fun searchGame(search: String) = gameRepository.searchGame(search)
 
-    override fun getGameLibraries(): Flow<List<Game>> {
-        TODO("Not yet implemented")
-    }
+    override fun getGameLibraries(): Flow<List<Game>> = gameRepository.getGameLibraries()
 
     override suspend fun getDetailGame(id: Int) = gameRepository.getDetailGame(id)
 
