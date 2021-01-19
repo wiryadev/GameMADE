@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textAppearance="?textAppearanceBody2"
+            android:textAppearance="?textAppearanceSubtitle2"
             tools:text="@string/release_dummy"
             app:layout_constraintStart_toStartOf="@+id/tv_detail_series"
             app:layout_constraintTop_toBottomOf="@+id/tv_detail_series" />

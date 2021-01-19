@@ -1,8 +1,11 @@
 package com.wiryadev.gamemade.ui.main
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.utils.gone
@@ -22,6 +25,17 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+
+        binding.navView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_library -> {
+                    val uriNav = Uri.parse("gamemade://favorite")
+                    navController.navigate(uriNav)
+                }
+            }
+            return@setOnNavigationItemSelectedListener true
+        }
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.detail_fragment) {
                 binding.navView.gone()

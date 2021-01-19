@@ -14,11 +14,11 @@
     </style>
 
     <style name="TextAppearance.MyTheme.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins_medium</item>
     </style>
 
     <style name="TextAppearance.MyTheme.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins_semibold</item>
     </style>
 
     <style name="TextAppearance.MyTheme.Headline6" parent="TextAppearance.MaterialComponents.Headline6">

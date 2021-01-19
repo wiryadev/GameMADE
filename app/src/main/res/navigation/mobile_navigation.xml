@@ -27,9 +27,9 @@
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.wiryadev.gamemade.ui.library.LibraryFragment"
-        android:label="@string/title_library"
-        tools:layout="@layout/fragment_library" />
+        android:name="com.wiryadev.gamemade.favorite.LibraryFragment">
+        <deepLink app:uri="gamemade://favorite"/>
+    </fragment>
 
     <fragment
         android:id="@+id/detail_fragment"
