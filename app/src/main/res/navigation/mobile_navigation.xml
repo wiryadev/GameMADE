@@ -39,6 +39,19 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detail_fragment_to_review_reader_fragment"
+            app:destination="@id/review_reader_fragment" />
     </fragment>
+
+    <dialog
+        android:id="@+id/review_reader_fragment"
+        android:name="com.wiryadev.gamemade.ui.detail.ReviewReaderFragment"
+        android:label="fragment_review_reader"
+        tools:layout="@layout/fragment_review_reader" >
+        <argument
+            android:name="metacriticUrl"
+            app:argType="string" />
+    </dialog>
 
 </navigation>

@@ -1,25 +1,34 @@
 package com.wiryadev.gamemade.ui.detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.google.android.material.transition.MaterialContainerTransform
 import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
+import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
 import com.wiryadev.gamemade.core.utils.gone
+import com.wiryadev.gamemade.core.utils.themeColor
+import com.wiryadev.gamemade.core.utils.toDp
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -35,6 +44,17 @@ class DetailFragment : Fragment() {
     private var isFavorite = false
 
     private lateinit var game: Game
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.nav_host_fragment
+            duration = DELAY_TRANSITION
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -114,7 +134,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun setButtonState(state: Boolean) {
-        with (binding?.floatingActionButton) {
+        with(binding?.floatingActionButton) {
             if (state) {
                 this?.apply {
                     setImageResource(R.drawable.ic_round_star_24)
@@ -132,7 +152,12 @@ class DetailFragment : Fragment() {
     private fun showDetail(game: Game) {
         with(binding?.contentDetail) {
             this?.ivDetailPoster?.load(game.bgImage) {
-                transformations(RoundedCornersTransformation(bottomLeft = CORNER_RADIUS, bottomRight = CORNER_RADIUS))
+                transformations(
+                    RoundedCornersTransformation(
+                        bottomLeft = CORNER_RADIUS,
+                        bottomRight = CORNER_RADIUS
+                    )
+                )
             }
 
             val gameSeries = "Game Series: ${game.gameSeriesCount}"
@@ -146,6 +171,38 @@ class DetailFragment : Fragment() {
 
             val releaseDate = "Released: ${game.released ?: TBA}"
             this?.tvDetailRelease?.text = releaseDate
+
+            if (game.metacriticUrl.isNullOrEmpty()) {
+                this?.btnReview?.gone()
+
+                // Make bottom constraint for tv_detail_desc
+                val constraintLayout: ConstraintLayout? = this?.contentLayout
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+                constraintSet.connect(
+                    R.id.tv_detail_desc,
+                    ConstraintSet.BOTTOM,
+                    R.id.content_layout,
+                    ConstraintSet.BOTTOM
+                )
+                constraintSet.applyTo(constraintLayout)
+
+                // set the marginBottom value
+                val layoutParams = this?.tvDetailDesc?.layoutParams as ConstraintLayout.LayoutParams
+                layoutParams.bottomMargin = 24.toDp(requireContext())
+                this.tvDetailDesc.layoutParams = layoutParams
+            } else {
+                this?.btnReview?.visible()
+                val bundle = Bundle().apply {
+                    putString(ReviewReaderFragment.REVIEW_URL, game.metacriticUrl)
+                }
+                this?.btnReview?.setOnClickListener {
+                    findNavController().navigate(
+                        R.id.action_detail_fragment_to_review_reader_fragment,
+                        bundle
+                    )
+                }
+            }
         }
     }
 

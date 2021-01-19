@@ -6,14 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.ui.GameAdapter
+import com.wiryadev.gamemade.core.utils.Constant
+import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
@@ -37,9 +42,19 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        enterTransition = MaterialFadeThrough().apply {
+            duration = DELAY_TRANSITION
+        }
+
         gameAdapter = GameAdapter()
 
         gameAdapter.setOnItemClickListener {
+            exitTransition = MaterialElevationScale(false).apply {
+                duration = DELAY_TRANSITION
+            }
+            reenterTransition = MaterialElevationScale(true).apply {
+                duration = DELAY_TRANSITION
+            }
             val bundle = Bundle().apply {
                 putInt(DetailFragment.ARGS, it)
             }
@@ -56,6 +71,9 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         with(binding?.rvSearch) {
             this?.layoutManager = LinearLayoutManager(context)
