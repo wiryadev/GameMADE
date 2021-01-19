@@ -8,6 +8,8 @@ import coil.transform.RoundedCornersTransformation
 import com.wiryadev.gamemade.core.databinding.ItemGameBinding
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
+import com.wiryadev.gamemade.core.utils.Constant.Companion.NONE
+import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
 
 class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
 
@@ -40,10 +42,10 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
 
                 tvTitle.text = data.title
 
-                val rating = data.metacritic ?: "N/A"
+                val rating = data.metacritic ?: NONE
                 tvMetacritic.text = rating.toString()
 
-                val releaseDate = "Released: ${data.released ?: ("TBA")}"
+                val releaseDate = "Released: ${data.released ?: TBA}"
                 tvRelease.text = releaseDate
 
                 root.setOnClickListener {

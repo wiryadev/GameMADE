@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.detailFragment) {
+            if (destination.id == R.id.detail_fragment) {
                 binding.navView.gone()
             } else {
                 binding.navView.visible()

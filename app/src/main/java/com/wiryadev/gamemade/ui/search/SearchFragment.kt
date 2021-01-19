@@ -43,7 +43,7 @@ class SearchFragment : Fragment() {
             val bundle = Bundle().apply {
                 putInt(DetailFragment.ARGS, it)
             }
-            findNavController().navigate(R.id.action_navigation_search_to_detailFragment, bundle)
+            findNavController().navigate(R.id.action_navigation_search_to_detail_fragment, bundle)
         }
     }
 

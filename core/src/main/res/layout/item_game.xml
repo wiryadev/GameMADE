@@ -20,14 +20,14 @@
             android:id="@+id/iv_poster"
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/game_poster"
+            tools:srcCompat="@drawable/test"
             app:layout_constraintHeight_min="140dp"
             app:layout_constraintHeight_max="180dp"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@drawable/test"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/game_poster" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_title"

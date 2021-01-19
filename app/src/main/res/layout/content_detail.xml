@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/nested_scroll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_detail_poster"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:contentDescription="@string/game_poster"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_min="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/test" />
+
+        <TextView
+            android:id="@+id/tv_detail_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:textAppearance="?textAppearanceHeadline5"
+            tools:text="@string/dummy_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_detail_poster" />
+
+        <TextView
+            android:id="@+id/tv_detail_series"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?textAppearanceCaption"
+            tools:text="@string/game_series_dummy"
+            app:layout_constraintStart_toStartOf="@+id/tv_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_title" />
+
+        <TextView
+            android:id="@+id/tv_detail_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?textAppearanceBody2"
+            tools:text="@string/release_dummy"
+            app:layout_constraintStart_toStartOf="@+id/tv_detail_series"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_series" />
+
+        <TextView
+            android:id="@+id/tv_detail_metacritic"
+            android:layout_width="42dp"
+            android:layout_height="33dp"
+            android:background="@drawable/bg_score"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="2dp"
+            android:textAppearance="?textAppearanceSubtitle2"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_detail_release"
+            app:layout_constraintEnd_toEndOf="@+id/tv_detail_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_series"
+            tools:text="96" />
+
+        <TextView
+            android:id="@+id/tv_detail_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:textAppearance="?textAppearanceBody2"
+            tools:text="@string/desc_dummy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_release" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

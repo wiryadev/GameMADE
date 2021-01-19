@@ -9,9 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.domain.model.Game
+import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
+import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentDetailBinding
@@ -51,9 +55,19 @@ class DetailFragment : Fragment() {
         if (id != null) {
             viewModel.getDetail(id)
             observeData()
+            observeFavorite(id)
         }
 
-        Log.d(ARGS, "onViewCreated: $id")
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            binding?.contentDetail?.nestedScroll?.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                if (scrollY > oldScrollY) {
+                    binding?.floatingActionButton?.hide()
+                } else {
+                    binding?.floatingActionButton?.show()
+                }
+            }
+        }
+
     }
 
     override fun onDestroyView() {
@@ -72,8 +86,8 @@ class DetailFragment : Fragment() {
                             val detailGame = result.data
                             if (detailGame != null) {
                                 game = detailGame
+                                showDetail(game)
                                 this?.floatingActionButton?.visible()
-                                observeFavorite(game.id)
                             }
                         }
                         is Resource.Error -> {
@@ -88,15 +102,11 @@ class DetailFragment : Fragment() {
     }
 
     private fun observeFavorite(id: Int) {
-        Log.d("Fav", "setButtonState: called observer")
         viewModel.checkFavorite(id).observe(viewLifecycleOwner, {
-            Log.d("Fav", "setButtonState: $it")
             if (it > 0) {
-                Log.d("Fav", "setButtonState: $it")
                 isFavorite = true
                 setButtonState(isFavorite)
             } else {
-                Log.d("Fav", "setButtonState: $it")
                 isFavorite = false
                 setButtonState(isFavorite)
             }
@@ -104,40 +114,39 @@ class DetailFragment : Fragment() {
     }
 
     private fun setButtonState(state: Boolean) {
-        Log.d("Fav", "setButtonState: called state")
         with (binding?.floatingActionButton) {
             if (state) {
                 this?.apply {
                     setImageResource(R.drawable.ic_round_star_24)
                     setOnClickListener { viewModel.deleteGameFromLibrary(game) }
                 }
-                Log.d("Fav", "setButtonState: called $state")
             } else {
                 this?.apply {
                     setImageResource(R.drawable.ic_round_star_border_24)
                     setOnClickListener { viewModel.insertGameToLibrary(game) }
-                    Log.d("Fav", "setButtonState: called $state")
                 }
             }
         }
     }
 
-//    private fun setButtonState(state: Boolean) {
-//        Log.d("Fav", "setButtonState: called state")
-//        if (state) {
-//            binding?.floatingActionButton?.apply {
-//                setImageResource(R.drawable.ic_round_star_24)
-//                setOnClickListener { viewModel.insertGameToLibrary(game) }
-//                Log.d("Fav", "setButtonState: called $state")
-//            }
-//        } else {
-//            binding?.floatingActionButton?.apply {
-//                setImageResource(R.drawable.ic_round_star_border_24)
-//                setOnClickListener { viewModel.deleteGameFromLibrary(game) }
-//                Log.d("Fav", "setButtonState: called $state")
-//            }
-//        }
-//
-//    }
+    private fun showDetail(game: Game) {
+        with(binding?.contentDetail) {
+            this?.ivDetailPoster?.load(game.bgImage) {
+                transformations(RoundedCornersTransformation(bottomLeft = CORNER_RADIUS, bottomRight = CORNER_RADIUS))
+            }
+
+            val gameSeries = "Game Series: ${game.gameSeriesCount}"
+            this?.tvDetailSeries?.text = gameSeries
+
+            this?.tvDetailTitle?.text = game.title
+            this?.tvDetailDesc?.text = game.description
+
+            this?.tvDetailMetacritic?.visible()
+            this?.tvDetailMetacritic?.text = game.metacritic.toString()
+
+            val releaseDate = "Released: ${game.released ?: TBA}"
+            this?.tvDetailRelease?.text = releaseDate
+        }
+    }
 
 }
