@@ -2,6 +2,7 @@ package com.wiryadev.gamemade.ui.detail
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.google.android.material.transition.MaterialContainerTransform
@@ -41,6 +43,8 @@ class DetailFragment : Fragment() {
     private val binding get() = _binding
 
     private val viewModel: DetailViewModel by viewModels()
+    private val args: DetailFragmentArgs by navArgs()
+
     private var isFavorite = false
 
     private lateinit var game: Game
@@ -69,9 +73,19 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO: Change all the bundle navigation to deeplink
+        Log.d("TAG", "onViewCreated 1 : ${args.stringId}")
         val id = arguments?.getInt(ARGS)
+        val stringId = args.stringId?.toInt()
+        Log.d("TAG", "onViewCreated 2 : $stringId")
 
-        if (id != null) {
+        if (stringId != null) {
+            Log.d("TAG", "onViewCreated 3 : $stringId")
+            viewModel.getDetail(stringId)
+            observeData()
+            observeFavorite(stringId)
+        } else if (id != null) {
+            Log.d("TAG", "onViewCreated id : $id")
             viewModel.getDetail(id)
             observeData()
             observeFavorite(id)
