@@ -35,10 +35,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    companion object {
-        const val ARGS = "args"
-    }
-
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding
 
@@ -46,7 +42,6 @@ class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
 
     private var isFavorite = false
-
     private lateinit var game: Game
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,22 +68,12 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Change all the bundle navigation to deeplink
-        Log.d("TAG", "onViewCreated 1 : ${args.stringId}")
-        val id = arguments?.getInt(ARGS)
         val stringId = args.stringId?.toInt()
-        Log.d("TAG", "onViewCreated 2 : $stringId")
 
         if (stringId != null) {
-            Log.d("TAG", "onViewCreated 3 : $stringId")
             viewModel.getDetail(stringId)
             observeData()
             observeFavorite(stringId)
-        } else if (id != null) {
-            Log.d("TAG", "onViewCreated id : $id")
-            viewModel.getDetail(id)
-            observeData()
-            observeFavorite(id)
         }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -116,6 +101,8 @@ class DetailFragment : Fragment() {
                         is Resource.Loading -> this?.progressBar?.visible()
                         is Resource.Success -> {
                             this?.progressBar?.gone()
+                            this?.viewError?.root?.gone()
+
                             val detailGame = result.data
                             if (detailGame != null) {
                                 game = detailGame
@@ -126,8 +113,8 @@ class DetailFragment : Fragment() {
                         }
                         is Resource.Error -> {
                             this?.progressBar?.gone()
-                            Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT)
-                                .show()
+                            this?.viewError?.root?.visible()
+                            this?.viewError?.tvError?.text = result.message
                         }
                     }
                 })

@@ -49,15 +49,15 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
                 tvRelease.text = releaseDate
 
                 root.setOnClickListener {
-                    onItemClickListener?.let { it(data.id) }
+                    onItemClickListener?.let { it(data.id.toString()) }
                 }
             }
         }
     }
 
-    private var onItemClickListener: ((Int) -> Unit)? = null
+    private var onItemClickListener: ((String) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (Int) -> Unit) {
+    fun setOnItemClickListener(listener: (String) -> Unit) {
         onItemClickListener = listener
     }
 }

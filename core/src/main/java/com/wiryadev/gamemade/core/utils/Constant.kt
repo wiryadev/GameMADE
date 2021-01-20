@@ -8,5 +8,8 @@ class Constant {
 
         const val TBA = "TBA"
         const val NONE = "N/A"
+
+        const val DEEPLINK_LIBRARY = "gamemade://favorite"
+        const val DEEPLINK_DETAIL = "gamemade://detail/"
     }
 }

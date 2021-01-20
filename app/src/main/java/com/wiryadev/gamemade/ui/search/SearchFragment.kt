@@ -1,5 +1,6 @@
 package com.wiryadev.gamemade.ui.search
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
@@ -55,10 +57,12 @@ class SearchFragment : Fragment() {
             reenterTransition = MaterialElevationScale(true).apply {
                 duration = DELAY_TRANSITION
             }
-            val bundle = Bundle().apply {
-                putInt(DetailFragment.ARGS, it)
-            }
-            findNavController().navigate(R.id.action_navigation_search_to_detail_fragment, bundle)
+
+            val request = NavDeepLinkRequest.Builder
+                .fromUri(Uri.parse(Constant.DEEPLINK_DETAIL + it))
+                .build()
+
+            findNavController().navigate(request)
         }
     }
 
@@ -123,7 +127,8 @@ class SearchFragment : Fragment() {
                     }
                     is Resource.Error -> {
                         this?.progressBar?.gone()
-                        Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                        this?.viewError?.root?.visible()
+                        this?.viewError?.tvError?.text = it.message
                     }
                 }
             })

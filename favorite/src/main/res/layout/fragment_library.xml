@@ -40,8 +40,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/view_error"
-        layout="@layout/view_error"
+        android:id="@+id/view_empty"
+        layout="@layout/view_empty"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

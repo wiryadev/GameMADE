@@ -8,19 +8,18 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.core.ui.GameAdapter
+import com.wiryadev.gamemade.core.utils.Constant.Companion.DEEPLINK_DETAIL
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.di.FavoriteModuleDependencies
 import com.wiryadev.gamemade.favorite.databinding.FragmentLibraryBinding
-import com.wiryadev.gamemade.ui.detail.DetailFragment
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
@@ -64,7 +63,7 @@ class LibraryFragment : Fragment() {
             }
 
             val request = NavDeepLinkRequest.Builder
-                .fromUri(Uri.parse("gamemade://detail/$it"))
+                .fromUri(Uri.parse(DEEPLINK_DETAIL + it))
                 .build()
 
             findNavController().navigate(request)
@@ -94,6 +93,7 @@ class LibraryFragment : Fragment() {
             adapter = gameAdapter
             setHasFixedSize(true)
         }
+
         observeData()
     }
 
@@ -105,8 +105,14 @@ class LibraryFragment : Fragment() {
     private fun observeData() {
         with(binding) {
             viewModel.data.observe(viewLifecycleOwner, {
+                this?.progressBar?.gone()
                 gameAdapter.setData(it)
-                if (it.isNotEmpty()) this?.progressBar?.gone() else this?.progressBar?.visible()
+                if (it.isNotEmpty()) {
+                    this?.viewEmpty?.root?.gone()
+                } else {
+                    this?.viewEmpty?.root?.visible()
+                    this?.viewEmpty?.tvError?.text = getString(R.string.empty_message)
+                }
             })
         }
     }

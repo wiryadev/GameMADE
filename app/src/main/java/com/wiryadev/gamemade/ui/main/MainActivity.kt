@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.wiryadev.gamemade.R
+import com.wiryadev.gamemade.core.utils.Constant.Companion.DEEPLINK_LIBRARY
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.ActivityMainBinding
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_library -> {
-                    val uriNav = Uri.parse("gamemade://favorite")
+                    val uriNav = Uri.parse(DEEPLINK_LIBRARY)
                     navController.navigate(uriNav)
                 }
             }
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.detail_fragment) {
+            if (destination.id == R.id.detail_fragment
+                || destination.id == R.id.review_reader_fragment) {
                 binding.navView.gone()
             } else {
                 binding.navView.visible()
