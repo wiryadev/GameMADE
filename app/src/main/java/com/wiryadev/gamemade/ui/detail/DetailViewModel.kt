@@ -18,13 +18,15 @@ class DetailViewModel @ViewModelInject constructor(private val useCase: GameUseC
     lateinit var detail: LiveData<Resource<Game>>
 
     fun getDetail(id: Int) = viewModelScope.launch {
-        detail = useCase.getDetailGame(id)
-            .onStart {
-                emit(Resource.Loading())
-                Log.d("VM", "getDetail: $id")
-            }
-            .catch { exception -> Resource.Error(exception.toString(), null) }
-            .asLiveData()
+        if (!::detail.isInitialized) {
+            detail = useCase.getDetailGame(id)
+                .onStart {
+                    emit(Resource.Loading())
+                    Log.d("VM", "getDetail: $id")
+                }
+                .catch { exception -> Resource.Error(exception.toString(), null) }
+                .asLiveData()
+        }
     }
 
     fun checkFavorite(id: Int) = useCase.checkFavorite(id).asLiveData()
