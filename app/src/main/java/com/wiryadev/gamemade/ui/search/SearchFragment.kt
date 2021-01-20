@@ -123,6 +123,7 @@ class SearchFragment : Fragment() {
                     is Resource.Loading -> this?.progressBar?.visible()
                     is Resource.Success -> {
                         this?.progressBar?.gone()
+                        this?.viewError?.root?.gone()
                         gameAdapter.setData(it.data)
                     }
                     is Resource.Error -> {

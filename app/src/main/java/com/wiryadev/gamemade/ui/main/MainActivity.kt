@@ -3,9 +3,7 @@ package com.wiryadev.gamemade.ui.main
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DEEPLINK_LIBRARY
