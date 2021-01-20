@@ -14,6 +14,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.android.material:material:$material_version"
     implementation "io.coil-kt:coil:$coil_version"
+    implementation "com.airbnb.android:lottie:$lottie_version"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

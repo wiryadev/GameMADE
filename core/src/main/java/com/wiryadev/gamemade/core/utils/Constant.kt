@@ -5,6 +5,7 @@ class Constant {
         const val CORNER_RADIUS = 24f
         const val TIMEOUT = 120
         const val DELAY_TRANSITION = 300L
+        const val DELAY_SPLASH = 2000L
 
         const val TBA = "TBA"
         const val NONE = "N/A"

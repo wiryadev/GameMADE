@@ -1,0 +1,44 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="300dp"
+    android:height="156dp"
+    android:viewportWidth="300"
+    android:viewportHeight="156"
+    tools:ignore="VectorRaster">
+  <path
+      android:pathData="M46.655,14.392C50.474,5.65 59.108,0 68.648,0H233.767C243.632,0 252.493,6.037 256.102,15.218L278.12,71.218C284.31,86.964 272.702,104 255.784,104H44.185C26.883,104 15.265,86.247 22.192,70.392L46.655,14.392Z"
+      android:fillColor="#4148E6"/>
+  <path
+      android:pathData="M222.21,101.764a57.353,31.702 71.689,1 0,58.208 -25.638a57.353,31.702 71.689,1 0,-58.208 25.638z"
+      android:fillColor="#4148E6"/>
+  <path
+      android:pathData="M77.79,101.764a57.353,31.702 108.311,1 1,-58.208 -25.638a57.353,31.702 108.311,1 1,58.208 25.638z"
+      android:fillColor="#4148E6"/>
+  <path
+      android:pathData="M181,77m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M79,38m-20,0a20,20 0,1 1,40 0a20,20 0,1 1,-40 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M117,65L117,65A4,4 0,0 1,121 69L121,85A4,4 0,0 1,117 89L117,89A4,4 0,0 1,113 85L113,69A4,4 0,0 1,117 65z"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M105,77L105,77A4,4 0,0 1,109 73L125,73A4,4 0,0 1,129 77L129,77A4,4 0,0 1,125 81L109,81A4,4 0,0 1,105 77z"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M219,24m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M205,38m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M233,38m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M219,52m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0"
+      android:fillColor="#D54679"/>
+  <path
+      android:pathData="M140,0H157V46.5C157,51.194 153.194,55 148.5,55V55C143.806,55 140,51.194 140,46.5V0Z"
+      android:fillColor="#D54679"/>
+</vector>
