@@ -1,7 +1,6 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
 import com.wiryadev.gamemade.core.data.GameRepository
-import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

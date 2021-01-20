@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
+import com.wiryadev.gamemade.core.R
 import com.wiryadev.gamemade.core.databinding.ItemGameBinding
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
@@ -38,6 +39,8 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
             with(binding) {
                 ivPoster.load(data.bgImage) {
                     transformations(RoundedCornersTransformation(CORNER_RADIUS))
+                    placeholder(R.drawable.ic_paceholder)
+                    error(R.drawable.ic_error)
                 }
 
                 tvTitle.text = data.title

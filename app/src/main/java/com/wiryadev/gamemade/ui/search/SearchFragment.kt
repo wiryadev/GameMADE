@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
-import com.wiryadev.gamemade.R
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.ui.GameAdapter
 import com.wiryadev.gamemade.core.utils.Constant
@@ -24,7 +22,6 @@ import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
-import com.wiryadev.gamemade.ui.detail.DetailFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

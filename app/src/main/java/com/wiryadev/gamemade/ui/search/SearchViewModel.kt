@@ -1,21 +1,24 @@
 package com.wiryadev.gamemade.ui.search
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
-import com.wiryadev.gamemade.core.data.Resource
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.wiryadev.gamemade.core.domain.usecase.GameUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
-import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapLatest
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class SearchViewModel @ViewModelInject constructor(private val useCase: GameUseCase) : ViewModel() {
 
-    var debounceDuration = 0
+    private var debounceDuration = 0
 
     val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
 
