@@ -45,15 +45,17 @@ class SearchFragment : Fragment() {
             duration = DELAY_TRANSITION
         }
 
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = DELAY_TRANSITION
+        }
+
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = DELAY_TRANSITION
+        }
+
         gameAdapter = GameAdapter()
 
         gameAdapter.setOnItemClickListener {
-            exitTransition = MaterialElevationScale(false).apply {
-                duration = DELAY_TRANSITION
-            }
-            reenterTransition = MaterialElevationScale(true).apply {
-                duration = DELAY_TRANSITION
-            }
 
             val request = NavDeepLinkRequest.Builder
                 .fromUri(Uri.parse(Constant.DEEPLINK_DETAIL + it))
@@ -73,9 +75,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
         with(binding?.rvSearch) {
             this?.layoutManager = LinearLayoutManager(context)
             this?.adapter = gameAdapter
@@ -86,6 +85,7 @@ class SearchFragment : Fragment() {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(search: String?): Boolean {
                     binding?.progressBar?.visible()
+                    binding?.viewError?.root?.gone()
                     viewModel.setDebounceDuration(false)
                     lifecycleScope.launch {
                         search?.let { viewModel.queryChannel.send(it) }
@@ -95,6 +95,7 @@ class SearchFragment : Fragment() {
 
                 override fun onQueryTextChange(search: String?): Boolean {
                     binding?.progressBar?.visible()
+                    binding?.viewError?.root?.gone()
                     viewModel.setDebounceDuration(true)
                     lifecycleScope.launch {
                         search?.let { viewModel.queryChannel.send(it) }
@@ -120,7 +121,6 @@ class SearchFragment : Fragment() {
                     is Resource.Loading -> this?.progressBar?.visible()
                     is Resource.Success -> {
                         this?.progressBar?.gone()
-                        this?.viewError?.root?.gone()
                         gameAdapter.setData(it.data)
                     }
                     is Resource.Error -> {

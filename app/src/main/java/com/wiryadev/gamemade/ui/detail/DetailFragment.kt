@@ -30,7 +30,6 @@ import com.wiryadev.gamemade.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 

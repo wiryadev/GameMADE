@@ -39,15 +39,17 @@ class HomeFragment : Fragment() {
             duration = DELAY_TRANSITION
         }
 
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = DELAY_TRANSITION
+        }
+
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = DELAY_TRANSITION
+        }
+
         gameAdapter = GameAdapter()
 
         gameAdapter.setOnItemClickListener {
-            exitTransition = MaterialElevationScale(false).apply {
-                duration = DELAY_TRANSITION
-            }
-            reenterTransition = MaterialElevationScale(true).apply {
-                duration = DELAY_TRANSITION
-            }
 
             val request = NavDeepLinkRequest.Builder
                 .fromUri(Uri.parse(Constant.DEEPLINK_DETAIL + it))

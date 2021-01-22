@@ -52,15 +52,17 @@ class LibraryFragment : Fragment() {
             duration = DELAY_TRANSITION
         }
 
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = DELAY_TRANSITION
+        }
+
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = DELAY_TRANSITION
+        }
+
         gameAdapter = GameAdapter()
 
         gameAdapter.setOnItemClickListener {
-            exitTransition = MaterialElevationScale(false).apply {
-                duration = DELAY_TRANSITION
-            }
-            reenterTransition = MaterialElevationScale(true).apply {
-                duration = DELAY_TRANSITION
-            }
 
             val request = NavDeepLinkRequest.Builder
                 .fromUri(Uri.parse(DEEPLINK_DETAIL + it))
@@ -82,10 +84,10 @@ class LibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*
+        commented temporarily to fix transition bug
         postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
-        postponeEnterTransition()
+         */
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         binding?.rvLibrary?.apply {

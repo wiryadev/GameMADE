@@ -2,6 +2,8 @@ package com.wiryadev.gamemade.ui.main
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
