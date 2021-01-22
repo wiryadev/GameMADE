@@ -2,4 +2,5 @@
 <resources>
     <string name="dummy_title">Red Dead Redemption 2</string>
     <string name="game_poster">Game Poster</string>
+    <string name="invalid_id">Game ID Not Found</string>
 </resources>

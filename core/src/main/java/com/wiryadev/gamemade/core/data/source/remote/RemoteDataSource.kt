@@ -37,7 +37,6 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
             try {
                 val response = apiService.searchGame(search)
                 val data = response.results
-                Log.d(TAG, "searchGame: $data")
                 if (response.count > 0) {
                     emit(ApiResponse.Success(data))
                 } else {
@@ -52,7 +51,6 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     suspend fun getDetailGame(id: Int): Flow<ApiResponse<GameResponse>> =
         flow {
             try {
-                Log.d(TAG, "getDetailGame: called")
                 val response = apiService.getDetailGame(id)
                 if (response != null) {
                     emit(ApiResponse.Success(response))

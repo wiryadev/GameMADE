@@ -1,6 +1,5 @@
 package com.wiryadev.gamemade.core.data
 
-import android.util.Log
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
@@ -8,7 +7,9 @@ import com.wiryadev.gamemade.core.data.source.remote.response.GameResponse
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import com.wiryadev.gamemade.core.utils.DataMapper
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -63,7 +64,6 @@ class GameRepository @Inject constructor(
     }
 
     override suspend fun getDetailGame(id: Int): Flow<Resource<Game>> {
-        Log.d("Repo", "getDetailGame: called")
         return remoteDataSource.getDetailGame(id).map {
             when (it) {
                 is ApiResponse.Success -> Resource.Success(DataMapper.mapDetailResponseToDomain(it.data))
@@ -78,7 +78,6 @@ class GameRepository @Inject constructor(
     }
 
     override suspend fun insertGameToLibrary(game: Game) {
-        Log.d("Repo", "insertGameToLibrary: called")
         localDataSource.insertGameToLibrary(
             DataMapper.mapDomainToEntity(game)
         )

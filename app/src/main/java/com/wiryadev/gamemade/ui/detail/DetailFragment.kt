@@ -21,6 +21,7 @@ import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
+import com.wiryadev.gamemade.core.utils.Constant.Companion.NONE
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.themeColor
 import com.wiryadev.gamemade.core.utils.toDp
@@ -72,6 +73,9 @@ class DetailFragment : Fragment() {
             viewModel.getDetail(stringId)
             observeData()
             observeFavorite(stringId)
+        } else {
+            binding?.viewError?.root?.visible()
+            binding?.viewError?.tvError?.text = getString(R.string.invalid_id)
         }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -166,30 +170,15 @@ class DetailFragment : Fragment() {
             this?.tvDetailDesc?.text = game.description
 
             this?.tvDetailMetacritic?.visible()
-            this?.tvDetailMetacritic?.text = game.metacritic.toString()
-
+            this?.tvDetailMetacritic?.text = "${game.metacritic ?: NONE}"
+            
             val releaseDate = "Released: ${game.released ?: TBA}"
             this?.tvDetailRelease?.text = releaseDate
 
             if (game.metacriticUrl.isNullOrEmpty()) {
                 this?.btnReview?.gone()
-
-                // Make bottom constraint for tv_detail_desc
-                val constraintLayout: ConstraintLayout? = this?.contentLayout
-                val constraintSet = ConstraintSet()
-                constraintSet.clone(constraintLayout)
-                constraintSet.connect(
-                    R.id.tv_detail_desc,
-                    ConstraintSet.BOTTOM,
-                    R.id.content_layout,
-                    ConstraintSet.BOTTOM
-                )
-                constraintSet.applyTo(constraintLayout)
-
-                // set the marginBottom value
-                val layoutParams = this?.tvDetailDesc?.layoutParams as ConstraintLayout.LayoutParams
-                layoutParams.bottomMargin = 24.toDp(requireContext())
-                this.tvDetailDesc.layoutParams = layoutParams
+                setConstraint()
+                setMargin()
             } else {
                 this?.btnReview?.visible()
                 val bundle = Bundle().apply {
@@ -202,6 +191,29 @@ class DetailFragment : Fragment() {
                     )
                 }
             }
+        }
+    }
+
+    // Make bottom constraint for tv_detail_desc
+    private fun setConstraint() {
+        val constraintLayout: ConstraintLayout? = binding?.contentDetail?.contentLayout
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+        constraintSet.connect(
+            R.id.tv_detail_desc,
+            ConstraintSet.BOTTOM,
+            R.id.content_layout,
+            ConstraintSet.BOTTOM
+        )
+        constraintSet.applyTo(constraintLayout)
+    }
+
+    // set the marginBottom value
+    private fun setMargin() {
+        with(binding?.contentDetail) {
+            val layoutParams = this?.tvDetailDesc?.layoutParams as ConstraintLayout.LayoutParams
+            layoutParams.bottomMargin = 24.toDp(requireContext())
+            this.tvDetailDesc.layoutParams = layoutParams
         }
     }
 
