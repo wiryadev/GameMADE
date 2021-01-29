@@ -83,8 +83,8 @@ class SearchFragment : Fragment() {
         binding?.svGame?.apply {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(search: String?): Boolean {
-                    binding?.progressBar?.visible()
-                    binding?.viewError?.root?.gone()
+                    handleLoadingView()
+
                     viewModel.setDebounceDuration(false)
                     lifecycleScope.launch {
                         search?.let { viewModel.queryChannel.send(it) }
@@ -93,8 +93,8 @@ class SearchFragment : Fragment() {
                 }
 
                 override fun onQueryTextChange(search: String?): Boolean {
-                    binding?.progressBar?.visible()
-                    binding?.viewError?.root?.gone()
+                    handleLoadingView()
+
                     viewModel.setDebounceDuration(true)
                     lifecycleScope.launch {
                         search?.let { viewModel.queryChannel.send(it) }
@@ -117,19 +117,27 @@ class SearchFragment : Fragment() {
         with(binding) {
             viewModel.searchResult.observe(viewLifecycleOwner, {
                 when (it) {
-                    is Resource.Loading -> this?.progressBar?.visible()
+                    is Resource.Loading -> handleLoadingView()
                     is Resource.Success -> {
                         this?.progressBar?.gone()
+                        this?.rvSearch?.visible()
                         gameAdapter.setData(it.data)
                     }
                     is Resource.Error -> {
                         this?.progressBar?.gone()
+                        this?.rvSearch?.gone()
                         this?.viewError?.root?.visible()
                         this?.viewError?.tvError?.text = it.message
                     }
                 }
             })
         }
+    }
+
+    private fun handleLoadingView() {
+        binding?.progressBar?.visible()
+        binding?.viewError?.root?.gone()
+        binding?.rvSearch?.gone()
     }
 
 }
