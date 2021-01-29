@@ -19,9 +19,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String" , "HOSTNAME" , "\"api.rawg.io\"")
         buildConfigField("String" , "BASE_URL" , "\"https://api.rawg.io/api/\"")
         buildConfigField("String" , "API_KEY" , "\"96bf8a18d93e44d89a1f2832904321e1\"")
+
+        buildConfigField("String" , "HOSTNAME" , "\"api.rawg.io\"")
+        buildConfigField("String" , "PIN_1" , "\"sha256/UGwY2lttaRoHnGd1gpeydmov1LzioQpzYTywtNSJkAU=\"")
+        buildConfigField("String" , "PIN_2" , "\"sha256/hS5jJ4P+iQUErBkvoWBQOd1T7VOAYlOVegvv1iMzpxA=\"")
+        buildConfigField("String" , "PIN_3" , "\"sha256/R+V29DqDnO269dFhAAB5jMlZHepWpDGuoejXJjprh7A=\"")
+        buildConfigField("String" , "PIN_4" , "\"sha256/FEzVOUp4dF3gI0ZVPRJhFbSJVXR+uQmMH65xhs1glH4=\"")
+
+        buildConfigField("String" , "DB_NAME" , "\"Game.db\"")
+        buildConfigField("String" , "DB_PHRASE" , "\"wiryadev\"")
     }
 
     buildTypes {

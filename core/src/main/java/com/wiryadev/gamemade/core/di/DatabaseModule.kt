@@ -2,6 +2,7 @@ package com.wiryadev.gamemade.core.di
 
 import android.content.Context
 import androidx.room.Room
+import com.wiryadev.gamemade.core.BuildConfig
 import com.wiryadev.gamemade.core.data.source.local.room.GameDao
 import com.wiryadev.gamemade.core.data.source.local.room.GameDatabase
 import dagger.Module
@@ -20,9 +21,9 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideDatabase(@ApplicationContext context: Context): GameDatabase {
-        val passphrase: ByteArray = SQLiteDatabase.getBytes("wiryadev".toCharArray())
+        val passphrase: ByteArray = SQLiteDatabase.getBytes(BuildConfig.DB_PHRASE.toCharArray())
         val factory = SupportFactory(passphrase)
-        return Room.databaseBuilder(context, GameDatabase::class.java, "Game.db")
+        return Room.databaseBuilder(context, GameDatabase::class.java, BuildConfig.DB_NAME)
             .fallbackToDestructiveMigration()
             .openHelperFactory(factory)
             .build()
