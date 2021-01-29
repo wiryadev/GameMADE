@@ -88,7 +88,6 @@ class LibraryFragment : Fragment() {
         commented temporarily to fix transition bug
         postponeEnterTransition()
          */
-        view.doOnPreDraw { startPostponedEnterTransition() }
 
         binding?.rvLibrary?.apply {
             layoutManager = LinearLayoutManager(context)

@@ -19,6 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
+        buildConfigField("String" , "HOSTNAME" , "\"api.rawg.io\"")
         buildConfigField("String" , "BASE_URL" , "\"https://api.rawg.io/api/\"")
         buildConfigField("String" , "API_KEY" , "\"96bf8a18d93e44d89a1f2832904321e1\"")
     }
@@ -64,4 +65,8 @@ dependencies {
     api "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     api "androidx.activity:activity-ktx:$activity_ktx_version"
     api "androidx.fragment:fragment-ktx:$fragment_ktx_version"
+
+    // Security
+    implementation "net.zetetic:android-database-sqlcipher:$sqlcipher_version"
+    implementation "androidx.sqlite:sqlite-ktx:$sqlite_version"
 }
