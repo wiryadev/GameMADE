@@ -29,6 +29,7 @@ class NetworkModule {
                 BuildConfig.PIN_4
             )
             .build()
+
         return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)

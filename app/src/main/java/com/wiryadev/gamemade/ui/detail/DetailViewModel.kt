@@ -1,7 +1,6 @@
 package com.wiryadev.gamemade.ui.detail
 
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -9,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.usecase.GameUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel @ViewModelInject constructor(private val useCase: GameUseCase) : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(private val useCase: GameUseCase) : ViewModel() {
 
     lateinit var detail: LiveData<Resource<Game>>
 

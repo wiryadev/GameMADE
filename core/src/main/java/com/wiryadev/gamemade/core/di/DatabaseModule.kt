@@ -23,12 +23,12 @@ class DatabaseModule {
     fun provideDatabase(@ApplicationContext context: Context): GameDatabase {
         val passphrase: ByteArray = SQLiteDatabase.getBytes(BuildConfig.DB_PHRASE.toCharArray())
         val factory = SupportFactory(passphrase)
+
         return Room.databaseBuilder(context, GameDatabase::class.java, BuildConfig.DB_NAME)
             .fallbackToDestructiveMigration()
             .openHelperFactory(factory)
             .build()
     }
-
 
     @Provides
     fun provideDao(database: GameDatabase): GameDao = database.GameDao()
