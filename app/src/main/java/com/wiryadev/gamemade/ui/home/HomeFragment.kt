@@ -85,6 +85,12 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        with(binding?.rvGame) {
+            if (this?.adapter != null) {
+                this.adapter = null
+            }
+        }
         _binding = null
     }
 

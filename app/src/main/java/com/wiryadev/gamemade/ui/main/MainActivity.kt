@@ -2,8 +2,6 @@ package com.wiryadev.gamemade.ui.main
 
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -18,13 +16,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navHostFragment: NavHostFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         binding.navView.setOnNavigationItemSelectedListener {
@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.detail_fragment
-                || destination.id == R.id.review_reader_fragment) {
+                || destination.id == R.id.review_reader_fragment
+            ) {
                 binding.navView.gone()
             } else {
                 binding.navView.visible()
@@ -47,6 +48,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.navView.setupWithNavController(navController)
+    }
+
+    override fun onBackPressed() {
+        if (isTaskRoot
+            && navHostFragment.childFragmentManager.backStackEntryCount == 0
+            && supportFragmentManager.backStackEntryCount == 0
+        ) {
+            finishAfterTransition()
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

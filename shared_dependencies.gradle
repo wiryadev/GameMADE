@@ -8,7 +8,9 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
     implementation "androidx.multidex:multidex:$multidex_version"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 
     // UI
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
