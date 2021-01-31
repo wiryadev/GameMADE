@@ -70,9 +70,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        postponeEnterTransition()
-//        view.doOnPreDraw { startPostponedEnterTransition() }
-
         with(binding?.rvGame) {
             this?.layoutManager = LinearLayoutManager(context)
             this?.adapter = gameAdapter
