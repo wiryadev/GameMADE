@@ -38,10 +38,10 @@ class LibraryFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         DaggerFavoriteComponent.builder()
-            .context(requireContext())
+            .context(requireActivity().applicationContext)
             .appDependencies(
                 EntryPointAccessors.fromApplication(
-                    requireContext(),
+                    requireActivity().applicationContext,
                     FavoriteModuleDependencies::class.java
                 )
             )
@@ -83,11 +83,6 @@ class LibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        /*
-        commented temporarily to fix transition bug
-        postponeEnterTransition()
-         */
 
         binding?.rvLibrary?.apply {
             layoutManager = LinearLayoutManager(context)
