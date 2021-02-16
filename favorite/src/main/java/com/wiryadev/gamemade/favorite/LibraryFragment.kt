@@ -37,7 +37,7 @@ class LibraryFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         DaggerFavoriteComponent.builder()
-            .context(requireActivity().applicationContext)
+            .context(requireActivity())
             .appDependencies(
                 EntryPointAccessors.fromApplication(
                     requireActivity().applicationContext,
