@@ -27,14 +27,15 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        binding.navView.setOnNavigationItemSelectedListener {
+        binding.navView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.navigation_library -> {
                     val uriNav = Uri.parse(DEEPLINK_LIBRARY)
                     navController.navigate(uriNav)
+                    true
                 }
+                else -> true
             }
-            return@setOnNavigationItemSelectedListener true
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
