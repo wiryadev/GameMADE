@@ -23,6 +23,7 @@ jobs:
             - ~/.android/cache
       - run:
           name: Run Build
+          no_output_timeout: 20m
           command: ./gradlew build
       - store_artifacts: 
           path: app/build/reports
