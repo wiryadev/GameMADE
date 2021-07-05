@@ -1,27 +1,28 @@
 import com.wiryadev.gamemade.buildsrc.*
 
 dependencies {
-    implementation AndroidX.coreKtx
-    implementation AndroidX.appCompat
-    implementation AndroidX.Navigation.ui
-    implementation AndroidX.Navigation.fragment
+    implementation Libs.AndroidX.coreKtx
+    implementation Libs.AndroidX.appCompat
+    implementation Libs.AndroidX.multidex
 
-    testImplementation Test.Junit.junit
-    androidTestImplementation Test.Junit.androidExt
-    androidTestImplementation Test.Espresso.core
+    implementation Libs.AndroidX.Navigation.ui
+    implementation Libs.AndroidX.Navigation.fragment
 
-    implementation AndroidX.multidex
-    debugImplementation AndroidX.leakCanary
+    testImplementation Libs.Test.Junit.junit
+    androidTestImplementation Libs.Test.Junit.androidExt
+    androidTestImplementation Libs.Test.Espresso.core
+
+    debugImplementation Libs.AndroidX.leakCanary
 
     // UI
-    implementation AndroidX.UI.constraintLayout
-    implementation AndroidX.UI.recyclerView
-    implementation AndroidX.UI.material
-    implementation AndroidX.UI.coil
-    implementation AndroidX.UI.lottie
-    implementation AndroidX.UI.shimmer
+    implementation Libs.AndroidX.UI.constraintLayout
+    implementation Libs.AndroidX.UI.recyclerView
+    implementation Libs.AndroidX.UI.material
+    implementation Libs.AndroidX.UI.coil
+    implementation Libs.AndroidX.UI.lottie
+    implementation Libs.AndroidX.UI.shimmer
 
     // Hilt
-    implementation Hilt.android
-    kapt Hilt.compiler
+    implementation Libs.Hilt.android
+    kapt Libs.Hilt.compiler
 }

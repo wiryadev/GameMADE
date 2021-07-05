@@ -4,20 +4,6 @@ import com.wiryadev.gamemade.buildsrc.*
 buildscript {
     ext {
         kotlin_version = "1.5.10"
-
-        room_version = "2.3.0"
-
-        retrofit_version = "2.9.0"
-        logging_interceptor_version = '4.9.0'
-
-        kotlin_coroutines_version = "1.5.0"
-        lifecycle_version = "2.3.1"
-
-        activity_ktx_version = "1.2.3"
-        fragment_ktx_version = "1.2.5"
-
-        sqlcipher_version = "4.4.2"
-        sqlite_version = "2.1.0"
     }
 
     repositories {
@@ -28,8 +14,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:${Hilt.version}"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${AndroidX.Navigation.version}"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:${Libs.Hilt.version}"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${Libs.AndroidX.Navigation.version}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
