@@ -9,10 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @FlowPreview
@@ -22,9 +19,9 @@ class SearchViewModel @Inject constructor(private val useCase: GameUseCase) : Vi
 
     private var debounceDuration = 0
 
-    val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
+    val queryChannel = MutableStateFlow("")
 
-    val searchResult = queryChannel.asFlow()
+    val searchResult = queryChannel
         .debounce(debounceDuration.toLong())
         .filter {
             it.trim().isNotEmpty()

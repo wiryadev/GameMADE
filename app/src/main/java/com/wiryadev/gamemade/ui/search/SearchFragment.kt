@@ -87,7 +87,7 @@ class SearchFragment : Fragment() {
 
                     viewModel.setDebounceDuration(false)
                     lifecycleScope.launch {
-                        search?.let { viewModel.queryChannel.send(it) }
+                        search?.let { viewModel.queryChannel.value = it }
                     }
                     return true
                 }
@@ -97,7 +97,7 @@ class SearchFragment : Fragment() {
 
                     viewModel.setDebounceDuration(true)
                     lifecycleScope.launch {
-                        search?.let { viewModel.queryChannel.send(it) }
+                        search?.let { viewModel.queryChannel.value = it }
                     }
                     return true
                 }
