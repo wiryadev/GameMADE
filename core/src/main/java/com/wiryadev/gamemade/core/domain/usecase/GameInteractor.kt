@@ -1,11 +1,11 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
-import com.wiryadev.gamemade.core.data.GameRepository
 import com.wiryadev.gamemade.core.domain.model.Game
+import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GameInteractor @Inject constructor(private val gameRepository: GameRepository) : GameUseCase {
+class GameInteractor @Inject constructor(private val gameRepository: IGameRepository) : GameUseCase {
 
     override fun getGameList() = gameRepository.getGameList()
 
