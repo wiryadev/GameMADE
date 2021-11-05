@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
 
     private fun observeData() {
         with(binding) {
-            viewModel.data.observe(viewLifecycleOwner, {
+            viewModel.data.observe(viewLifecycleOwner) {
                 when (it) {
                     is Resource.Loading -> this?.progressBar?.visible()
                     is Resource.Success -> {
@@ -102,10 +102,11 @@ class HomeFragment : Fragment() {
                     is Resource.Error -> {
                         this?.progressBar?.gone()
                         this?.viewError?.root?.visible()
-                        this?.viewError?.tvError?.text = it.message ?: getString(R.string.default_error_message)
+                        this?.viewError?.tvError?.text =
+                            it.message ?: getString(R.string.default_error_message)
                     }
                 }
-            })
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.res.use
+import com.wiryadev.gamemade.core.R
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -32,3 +33,5 @@ fun Context.themeColor(
 fun Int.toDp(context: Context):Int = TypedValue.applyDimension(
     TypedValue.COMPLEX_UNIT_DIP,this.toFloat(),context.resources.displayMetrics
 ).toInt()
+
+fun getEmptyMessage(context: Context) = context.resources.getString(R.string.empty_data)

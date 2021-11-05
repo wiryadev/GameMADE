@@ -3,7 +3,6 @@ package com.wiryadev.gamemade.core.data
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
-import com.wiryadev.gamemade.core.data.source.remote.response.GameResponse
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import com.wiryadev.gamemade.core.utils.DataMapper
@@ -19,29 +18,16 @@ class GameRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : IGameRepository {
 
-    override fun getGameList(): Flow<Resource<List<Game>>> {
-        return object : NetworkBoundResource<List<Game>, List<GameResponse>>() {
-            override fun loadFromDB(): Flow<List<Game>> {
-                return localDataSource.getAllCachedGame().map {
-                    DataMapper.mapCacheEntitiesToDomain(it)
-                }
+    override suspend fun getGameList(): Flow<Resource<List<Game>>> {
+        return remoteDataSource.getGameList().map { response ->
+            when (response) {
+                is ApiResponse.Success -> Resource.Success(DataMapper.mapResponseToDomain(response.data))
+                is ApiResponse.Empty -> Resource.Error(response.message)
+                is ApiResponse.Error -> Resource.Error(response.errorMessage)
             }
-
-            override fun shouldFetch(data: List<Game>?): Boolean =
-                data.isNullOrEmpty()
-
-            override suspend fun createCall(): Flow<ApiResponse<List<GameResponse>>> =
-                remoteDataSource.getGameList()
-
-            override suspend fun saveCallResult(data: List<GameResponse>) {
-                localDataSource.insertGameCaches(
-                    DataMapper.mapResponseToCacheEntities(data)
-                )
-            }
-        }.asFlow()
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override suspend fun searchGame(search: String): Resource<List<Game>> {
         return when (val apiResponse = remoteDataSource.searchGame(search).first()) {
             is ApiResponse.Success -> {
@@ -49,7 +35,7 @@ class GameRepository @Inject constructor(
                 Resource.Success(result)
             }
             is ApiResponse.Empty -> {
-                Resource.Error(apiResponse.toString())
+                Resource.Error(apiResponse.message)
             }
             is ApiResponse.Error -> {
                 Resource.Error(apiResponse.errorMessage)
@@ -64,11 +50,11 @@ class GameRepository @Inject constructor(
     }
 
     override suspend fun getDetailGame(id: Int): Flow<Resource<Game>> {
-        return remoteDataSource.getDetailGame(id).map {
-            when (it) {
-                is ApiResponse.Success -> Resource.Success(DataMapper.mapDetailResponseToDomain(it.data))
-                is ApiResponse.Empty -> Resource.Error(it.toString())
-                is ApiResponse.Error -> Resource.Error(it.errorMessage)
+        return remoteDataSource.getDetailGame(id).map { response ->
+            when (response) {
+                is ApiResponse.Success -> Resource.Success(DataMapper.mapDetailResponseToDomain(response.data))
+                is ApiResponse.Empty -> Resource.Error(response.message)
+                is ApiResponse.Error -> Resource.Error(response.errorMessage)
             }
         }
     }

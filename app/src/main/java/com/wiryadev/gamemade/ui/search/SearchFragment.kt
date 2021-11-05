@@ -2,6 +2,7 @@ package com.wiryadev.gamemade.ui.search
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.core.data.Resource
+import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.ui.GameAdapter
 import com.wiryadev.gamemade.core.utils.Constant
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
+import com.wiryadev.gamemade.core.utils.getEmptyMessage
 import com.wiryadev.gamemade.core.utils.gone
 import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
@@ -115,7 +118,7 @@ class SearchFragment : Fragment() {
 
     private fun observeData() {
         with(binding) {
-            viewModel.searchResult.observe(viewLifecycleOwner, {
+            viewModel.searchResult.observe(viewLifecycleOwner) {
                 when (it) {
                     is Resource.Loading -> handleLoadingView()
                     is Resource.Success -> {
@@ -127,10 +130,16 @@ class SearchFragment : Fragment() {
                         this?.progressBar?.gone()
                         this?.rvSearch?.gone()
                         this?.viewError?.root?.visible()
-                        this?.viewError?.tvError?.text = it.message
+                        Log.d("Search", "observeData: ${it.message}")
+                        val errorMessage = it.message
+                        this?.viewError?.tvError?.text = if (errorMessage.equals(RemoteDataSource.EMPTY)) {
+                            getEmptyMessage(requireContext())
+                        } else {
+                            errorMessage
+                        }
                     }
                 }
-            })
+            }
         }
     }
 
