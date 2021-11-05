@@ -12,10 +12,6 @@ import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
 
-    companion object {
-        private const val TAG = "RemoteDataSource"
-    }
-
     suspend fun getGameList(): Flow<ApiResponse<List<GameResponse>>> =
         flow {
             try {
@@ -24,7 +20,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
                 if (data.isNotEmpty()) {
                     emit(ApiResponse.Success(data))
                 } else {
-                    emit(ApiResponse.Empty)
+                    emit(ApiResponse.Empty(EMPTY))
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))
@@ -40,7 +36,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
                 if (response.count > 0) {
                     emit(ApiResponse.Success(data))
                 } else {
-                    emit(ApiResponse.Empty)
+                    emit(ApiResponse.Empty(EMPTY))
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))
@@ -55,12 +51,17 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
                 if (response != null) {
                     emit(ApiResponse.Success(response))
                 } else {
-                    emit(ApiResponse.Empty)
+                    emit(ApiResponse.Empty(EMPTY))
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))
                 Log.e(TAG, "getDetailGame: ${ex.message} ")
             }
         }.flowOn(Dispatchers.IO)
+
+    companion object {
+        private const val TAG = "RemoteDataSource"
+        const val EMPTY = "EmptyResult"
+    }
 
 }

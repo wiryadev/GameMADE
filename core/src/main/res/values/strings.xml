@@ -4,4 +4,5 @@
     <string name="game_poster">Game Poster</string>
     <string name="invalid_id">Game ID Not Found</string>
     <string name="dummy_date">2018–10–26</string>
+    <string name="empty_data">Data Not Found</string>
 </resources>

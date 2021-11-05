@@ -24,7 +24,6 @@ class DetailViewModel @Inject constructor(private val useCase: GameUseCase) : Vi
             detail = useCase.getDetailGame(id)
                 .onStart {
                     emit(Resource.Loading())
-                    Log.d("VM", "getDetail: $id")
                 }
                 .catch { exception -> Resource.Error(exception.toString(), null) }
                 .asLiveData()
