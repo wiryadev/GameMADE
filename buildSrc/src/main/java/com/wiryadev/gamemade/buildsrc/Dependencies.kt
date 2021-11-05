@@ -2,17 +2,17 @@ package com.wiryadev.gamemade.buildsrc
 
 object Libs {
     object AndroidX {
-        const val coreKtx = "androidx.core:core-ktx:1.3.2"
-        const val appCompat = "androidx.appcompat:appcompat:1.3.0"
+        const val coreKtx = "androidx.core:core-ktx:1.7.0"
+        const val appCompat = "androidx.appcompat:appcompat:1.3.1"
         const val multidex = "androidx.multidex:multidex:2.0.1"
         const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
         object UI {
-            const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
+            const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.1"
             const val recyclerView = "androidx.recyclerview:recyclerview:1.2.1"
             const val material = "com.google.android.material:material:1.4.0"
-            const val coil = "io.coil-kt:coil:1.2.2"
-            const val lottie = "com.airbnb.android:lottie:3.7.0"
+            const val coil = "io.coil-kt:coil:1.4.0"
+            const val lottie = "com.airbnb.android:lottie:4.1.0"
             const val shimmer = "com.facebook.shimmer:shimmer:0.5.0"
         }
 
@@ -24,19 +24,19 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.5.0"
+        private const val version = "1.5.2"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     }
 
     object Lifecycle {
-        const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+        const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
         const val activityKtx = "androidx.activity:activity-ktx:1.2.3"
         const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.5"
     }
 
     object Hilt {
-        private const val version = "2.38.1"
+        private const val version = "2.40"
         const val android = "com.google.dagger:hilt-android:$version"
         const val compiler = "com.google.dagger:hilt-compiler:$version"
     }
@@ -66,7 +66,7 @@ object Libs {
 
     object Test {
         object Junit {
-            private const val version = "4.13.1"
+            private const val version = "4.13.2"
             const val junit = "junit:junit:$version"
             const val androidExt = "androidx.test.ext:junit-ktx:1.1.2"
         }
