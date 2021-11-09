@@ -1,6 +1,7 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
 import androidx.paging.PagingData
+import com.wiryadev.gamemade.core.data.source.local.entity.GameEntity
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import kotlinx.coroutines.flow.Flow

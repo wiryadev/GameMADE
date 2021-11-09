@@ -2,6 +2,7 @@ package com.wiryadev.gamemade.core.domain.repository
 
 import androidx.paging.PagingData
 import com.wiryadev.gamemade.core.data.Resource
+import com.wiryadev.gamemade.core.data.source.local.entity.GameEntity
 import com.wiryadev.gamemade.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 

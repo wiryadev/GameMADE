@@ -3,8 +3,8 @@ package com.wiryadev.gamemade.core.data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.wiryadev.gamemade.core.data.source.local.GameLocalPagingSource
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
+import com.wiryadev.gamemade.core.data.source.local.entity.GameEntity
 import com.wiryadev.gamemade.core.data.source.remote.GameRemotePagingSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
@@ -51,13 +51,17 @@ class GameRepository @Inject constructor(
     }
 
     override fun getGameLibraries(): Flow<PagingData<Game>> {
+        val factory = localDataSource.getGameLibraries().map {
+            DataMapper.mapEntityToDomain(it)
+        }.asPagingSourceFactory()
+
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = {
-                GameLocalPagingSource(localDataSource)
+                factory.invoke()
             }
         ).flow
     }
