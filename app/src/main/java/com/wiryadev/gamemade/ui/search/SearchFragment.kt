@@ -2,31 +2,37 @@ package com.wiryadev.gamemade.ui.search
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
+import android.widget.ArrayAdapter
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
-import com.wiryadev.gamemade.core.data.Resource
-import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
+import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.ui.GameAdapter
+import com.wiryadev.gamemade.core.ui.GameLoadStateAdapter
 import com.wiryadev.gamemade.core.utils.Constant
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
-import com.wiryadev.gamemade.core.utils.getEmptyMessage
-import com.wiryadev.gamemade.core.utils.gone
-import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
@@ -37,7 +43,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by activityViewModels()
     private lateinit var gameAdapter: GameAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,8 +73,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding?.root
@@ -79,36 +87,48 @@ class SearchFragment : Fragment() {
 
         with(binding?.rvSearch) {
             this?.layoutManager = LinearLayoutManager(context)
-            this?.adapter = gameAdapter
-            this?.setHasFixedSize(true)
+            this?.adapter = gameAdapter.withLoadStateFooter(
+                GameLoadStateAdapter { gameAdapter.retry() }
+            )
         }
 
-        binding?.svGame?.apply {
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(search: String?): Boolean {
-                    handleLoadingView()
-
-                    viewModel.setDebounceDuration(false)
-                    lifecycleScope.launch {
-                        search?.let { viewModel.queryChannel.value = it }
-                    }
-                    return true
+        binding?.tvSearchGame?.run {
+            addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
                 }
 
-                override fun onQueryTextChange(search: String?): Boolean {
-                    handleLoadingView()
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
 
-                    viewModel.setDebounceDuration(true)
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     lifecycleScope.launch {
-                        search?.let { viewModel.queryChannel.value = it }
+                        s?.let { viewModel.queryChannel.value = it.toString() }
                     }
-                    return true
                 }
 
             })
+
+            setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    binding?.updateSearchResult(viewModel.accept)
+                    true
+                } else {
+                    false
+                }
+            }
         }
 
-        observeData()
+        binding?.observeData(
+            uiState = viewModel.state,
+            suggestionData = viewModel.searchResult,
+            pagingData = viewModel.pagingDataFlow,
+            onScrollChanged = viewModel.accept,
+        )
     }
 
     override fun onDestroyView() {
@@ -116,37 +136,100 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeData() {
-        with(binding) {
-            viewModel.searchResult.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Resource.Loading -> handleLoadingView()
-                    is Resource.Success -> {
-                        this?.progressBar?.gone()
-                        this?.rvSearch?.visible()
-                        gameAdapter.setData(it.data)
+    private fun FragmentSearchBinding.updateSearchResult(
+        onQueryChanged: (UiAction.Search) -> Unit,
+    ) {
+        tvSearchGame.text.trim().let {
+            if (it.isNotEmpty()) {
+                rvSearch.scrollToPosition(0)
+                onQueryChanged(UiAction.Search(query = it.toString()))
+            }
+        }
+    }
+
+    private fun FragmentSearchBinding.observeData(
+        uiState: StateFlow<UiState>,
+        suggestionData: Flow<List<Game>>,
+        pagingData: Flow<PagingData<Game>>,
+        onScrollChanged: (UiAction.Scroll) -> Unit,
+    ) {
+        viewError.btnRetry.setOnClickListener { gameAdapter.retry() }
+
+        rvSearch.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
+            }
+        })
+
+        val isNotLoading = gameAdapter.loadStateFlow
+            // Only emit when REFRESH LoadState for the paging source changes.
+            .distinctUntilChangedBy { it.source.refresh }
+            // Only react to cases where REFRESH completes i.e., NotLoading.
+            .map { it.source.refresh is LoadState.NotLoading }
+
+        val hasNotScrolledForCurrentSearch = uiState
+            .map { it.hasNotScrolledForCurrentSearch }
+            .distinctUntilChanged()
+
+        val shouldScrollToTop = combine(
+            flow = isNotLoading,
+            flow2 = hasNotScrolledForCurrentSearch,
+            transform = Boolean::and
+        ).distinctUntilChanged()
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    suggestionData.collectLatest { item ->
+                        if (item.isNotEmpty()) {
+                            val searchSuggestion = item.map { it.title }
+                            val adapter = ArrayAdapter(
+                                requireContext(),
+                                android.R.layout.select_dialog_item,
+                                searchSuggestion
+                            )
+                            adapter.notifyDataSetChanged()
+                            binding?.tvSearchGame?.setAdapter(adapter)
+                        }
                     }
-                    is Resource.Error -> {
-                        this?.progressBar?.gone()
-                        this?.rvSearch?.gone()
-                        this?.viewError?.root?.visible()
-                        Log.d("Search", "observeData: ${it.message}")
-                        val errorMessage = it.message
-                        this?.viewError?.tvError?.text = if (errorMessage.equals(RemoteDataSource.EMPTY)) {
-                            getEmptyMessage(requireContext())
-                        } else {
-                            errorMessage
+                }
+                launch {
+                    pagingData.collectLatest(
+                        gameAdapter::submitData
+                    )
+                }
+
+                launch {
+                    shouldScrollToTop.collect { shouldScroll ->
+                        if (shouldScroll) rvSearch.scrollToPosition(0)
+                    }
+                }
+
+                launch {
+                    gameAdapter.loadStateFlow.collect { loadState ->
+                        val isListEmpty = loadState.refresh is LoadState.NotLoading
+                                && gameAdapter.itemCount == 0
+                        // Only show the list if refresh succeeds.
+                        rvSearch.isVisible = !isListEmpty
+                        // Show loading spinner during initial load or refresh.
+                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        // Show the retry state if initial load or refresh fails.
+                        viewError.root.isVisible = loadState.source.refresh is LoadState.Error
+
+                        // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+                        val errorState = loadState.source.append as? LoadState.Error
+                            ?: loadState.source.prepend as? LoadState.Error
+                            ?: loadState.append as? LoadState.Error
+                            ?: loadState.prepend as? LoadState.Error
+                            ?: loadState.source.refresh as? LoadState.Error
+
+                        errorState?.let {
+                            viewError.tvError.text = it.error.localizedMessage
                         }
                     }
                 }
             }
         }
-    }
-
-    private fun handleLoadingView() {
-        binding?.progressBar?.visible()
-        binding?.viewError?.root?.gone()
-        binding?.rvSearch?.gone()
     }
 
 }

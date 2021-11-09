@@ -58,6 +58,7 @@
         android:id="@+id/view_error"
         layout="@layout/view_error"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

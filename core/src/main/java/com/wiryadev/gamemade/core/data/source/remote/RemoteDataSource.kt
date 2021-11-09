@@ -4,6 +4,7 @@ import android.util.Log
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiService
 import com.wiryadev.gamemade.core.data.source.remote.response.GameResponse
+import com.wiryadev.gamemade.core.data.source.remote.response.ListGameResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,37 +13,14 @@ import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getGameList(): Flow<ApiResponse<List<GameResponse>>> =
-        flow {
-            try {
-                val response = apiService.getGameList()
-                val data = response.results
-                if (data.isNotEmpty()) {
-                    emit(ApiResponse.Success(data))
-                } else {
-                    emit(ApiResponse.Empty(EMPTY))
-                }
-            } catch (ex: Exception) {
-                emit(ApiResponse.Error(ex.message.toString()))
-                Log.e(TAG, "getGameList: ${ex.message} ")
-            }
-        }.flowOn(Dispatchers.IO)
+    suspend fun getGameList(page: Int, pageSize: Int): ListGameResponse =
+        apiService.getGameList(page, pageSize)
 
-    suspend fun searchGame(search: String): Flow<ApiResponse<List<GameResponse>>> =
-        flow {
-            try {
-                val response = apiService.searchGame(search)
-                val data = response.results
-                if (response.count > 0) {
-                    emit(ApiResponse.Success(data))
-                } else {
-                    emit(ApiResponse.Empty(EMPTY))
-                }
-            } catch (ex: Exception) {
-                emit(ApiResponse.Error(ex.message.toString()))
-                Log.e(TAG, "getGameList: ${ex.message} ")
-            }
-        }.flowOn(Dispatchers.IO)
+    suspend fun getSearchResults(page: Int, pageSize: Int, query: String): ListGameResponse =
+        apiService.getGameList(page, pageSize, query)
+
+    suspend fun searchGame(search: String): List<GameResponse> =
+        apiService.searchGame(search).results
 
     suspend fun getDetailGame(id: Int): Flow<ApiResponse<GameResponse>> =
         flow {

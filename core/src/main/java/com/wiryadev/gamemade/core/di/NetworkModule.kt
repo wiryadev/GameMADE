@@ -31,7 +31,22 @@ class NetworkModule {
             .build()
 
         return OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addInterceptor(
+                HttpLoggingInterceptor().setLevel(
+                    if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+                )
+            )
+            .addInterceptor { chain ->
+                val original = chain.request()
+
+                val url = original.url.newBuilder()
+                    .addQueryParameter("key", BuildConfig.API_KEY)
+                    .build()
+
+                val request = original.newBuilder().url(url).build()
+
+                chain.proceed(request)
+            }
             .connectTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
             .readTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
             .certificatePinner(certificatePinner)
