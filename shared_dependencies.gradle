@@ -25,4 +25,7 @@ dependencies {
     // Hilt
     implementation Libs.Hilt.android
     kapt Libs.Hilt.compiler
+
+    // Paging
+    implementation Libs.Paging.paging
 }

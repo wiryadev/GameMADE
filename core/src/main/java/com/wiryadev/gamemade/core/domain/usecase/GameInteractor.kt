@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GameInteractor @Inject constructor(private val gameRepository: IGameRepository) : GameUseCase {
 
-    override suspend fun getGameList() = gameRepository.getGameList()
+    override fun getGameList() = gameRepository.getGameList()
 
     override suspend fun searchGame(search: String) = gameRepository.searchGame(search)
 

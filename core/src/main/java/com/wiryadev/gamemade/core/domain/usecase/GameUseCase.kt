@@ -1,12 +1,13 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
+import androidx.paging.PagingData
 import com.wiryadev.gamemade.core.data.Resource
 import com.wiryadev.gamemade.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 
 interface GameUseCase {
 
-    suspend fun getGameList(): Flow<Resource<List<Game>>>
+    fun getGameList(): Flow<PagingData<Game>>
 
     suspend fun searchGame(search: String): Resource<List<Game>>
 

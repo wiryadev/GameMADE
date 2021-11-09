@@ -1,5 +1,9 @@
 package com.wiryadev.gamemade.core.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.wiryadev.gamemade.core.data.source.GamePagingSource
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
@@ -18,14 +22,16 @@ class GameRepository @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : IGameRepository {
 
-    override suspend fun getGameList(): Flow<Resource<List<Game>>> {
-        return remoteDataSource.getGameList().map { response ->
-            when (response) {
-                is ApiResponse.Success -> Resource.Success(DataMapper.mapResponseToDomain(response.data))
-                is ApiResponse.Empty -> Resource.Error(response.message)
-                is ApiResponse.Error -> Resource.Error(response.errorMessage)
+    override fun getGameList(): Flow<PagingData<Game>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                GamePagingSource(remoteDataSource)
             }
-        }
+        ).flow
     }
 
     override suspend fun searchGame(search: String): Resource<List<Game>> {
@@ -73,5 +79,9 @@ class GameRepository @Inject constructor(
         localDataSource.deleteGameFromLibrary(
             DataMapper.mapDomainToEntity(game)
         )
+    }
+
+    companion object {
+        const val NETWORK_PAGE_SIZE = 20
     }
 }

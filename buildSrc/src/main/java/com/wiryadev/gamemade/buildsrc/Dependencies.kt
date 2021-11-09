@@ -30,9 +30,11 @@ object Libs {
     }
 
     object Lifecycle {
-        const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
-        const val activityKtx = "androidx.activity:activity-ktx:1.2.3"
-        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.5"
+        private const val version = "2.4.0"
+        const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
+        const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
+        const val activityKtx = "androidx.activity:activity-ktx:1.4.0"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.6"
     }
 
     object Hilt {
@@ -62,6 +64,11 @@ object Libs {
             const val sqliteKtx = "androidx.sqlite:sqlite-ktx:2.1.0"
             const val sqlCipher = "net.zetetic:android-database-sqlcipher:4.4.3"
         }
+    }
+
+    object Paging {
+        private const val version = "3.0.1"
+        const val paging = "androidx.paging:paging-runtime-ktx:$version"
     }
 
     object Test {

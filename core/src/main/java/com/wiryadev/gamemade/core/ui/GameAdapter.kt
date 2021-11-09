@@ -2,6 +2,8 @@ package com.wiryadev.gamemade.core.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
@@ -12,29 +14,30 @@ import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
 import com.wiryadev.gamemade.core.utils.Constant.Companion.NONE
 import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
 
-class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
+class GameAdapter : PagingDataAdapter<Game, GameAdapter.RecyclerViewHolder>(DIFF_CALLBACK) {
 
     private var listData = ArrayList<Game>()
 
-    fun setData(newListData: List<Game>?) {
-        if (newListData == null) return
-        listData.clear()
-        listData.addAll(newListData)
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
-        val itemGameBinding = ItemGameBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemGameBinding =
+            ItemGameBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecyclerViewHolder(itemGameBinding)
     }
 
     override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
-        holder.bind(listData[position])
+        val item = getItem(position)
+        item?.let { holder.bind(it) }
     }
 
     override fun getItemCount(): Int = listData.size
 
-    inner class RecyclerViewHolder(private val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RecyclerViewHolder(
+        private val binding: ItemGameBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+
+        }
         fun bind(data: Game) {
             with(binding) {
                 ivPoster.load(data.bgImage) {
@@ -62,5 +65,18 @@ class GameAdapter : RecyclerView.Adapter<GameAdapter.RecyclerViewHolder>() {
 
     fun setOnItemClickListener(listener: (String) -> Unit) {
         onItemClickListener = listener
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Game>() {
+            override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
+                return oldItem == newItem
+            }
+
+        }
     }
 }

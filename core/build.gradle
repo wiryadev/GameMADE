@@ -51,7 +51,7 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 }
 
@@ -72,6 +72,7 @@ dependencies {
     implementation Libs.Coroutines.android
 
     // Lifecycle
+    api Libs.Lifecycle.runtimeKtx
     api Libs.Lifecycle.livedataKtx
     api Libs.Lifecycle.activityKtx
     api Libs.Lifecycle.fragmentKtx
