@@ -20,10 +20,9 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.ui.GameAdapter
+import com.wiryadev.gamemade.core.ui.GameLoadStateAdapter
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DEEPLINK_DETAIL
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
-import com.wiryadev.gamemade.core.utils.gone
-import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.di.FavoriteModuleDependencies
 import com.wiryadev.gamemade.favorite.databinding.FragmentLibraryBinding
 import dagger.hilt.android.EntryPointAccessors
@@ -48,7 +47,7 @@ class LibraryFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         DaggerFavoriteComponent.builder()
-            .context(requireActivity())
+            .context(requireContext())
             .appDependencies(
                 EntryPointAccessors.fromApplication(
                     requireActivity().applicationContext,
@@ -96,7 +95,9 @@ class LibraryFragment : Fragment() {
 
         binding?.rvLibrary?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = gameAdapter
+            adapter = gameAdapter.withLoadStateFooter(
+                GameLoadStateAdapter { gameAdapter.retry() }
+            )
             setHasFixedSize(true)
         }
 
@@ -117,31 +118,31 @@ class LibraryFragment : Fragment() {
                     )
                 }
 
-//                launch {
-//                    gameAdapter.loadStateFlow.collect { loadState ->
-//                        val isListEmpty =
-//                            loadState.refresh is LoadState.NotLoading && gameAdapter.itemCount == 0
-//                        // show empty list
-//                        viewError.root.isVisible = isListEmpty
-//                        // Only show the list if refresh succeeds.
-//                        rvGame.isVisible = !isListEmpty
-//                        // Show loading spinner during initial load or refresh.
-//                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-//                        // Show the retry state if initial load or refresh fails.
-//                        viewError.btnRetry.isVisible = loadState.source.refresh is LoadState.Error
-//
-//                        // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
-//                        val errorState = loadState.source.append as? LoadState.Error
-//                            ?: loadState.source.prepend as? LoadState.Error
-//                            ?: loadState.append as? LoadState.Error
-//                            ?: loadState.prepend as? LoadState.Error
-//                            ?: loadState.source.refresh as? LoadState.Error
-//
-//                        errorState?.let {
-//                            viewError.tvError.text = it.error.localizedMessage
-//                        }
-//                    }
-//                }
+                launch {
+                    gameAdapter.loadStateFlow.collect { loadState ->
+                        val isListEmpty =
+                            loadState.refresh is LoadState.NotLoading && gameAdapter.itemCount == 0
+                        // show empty list
+                        viewEmpty.root.isVisible = isListEmpty
+                        // Only show the list if refresh succeeds.
+                        rvLibrary.isVisible = !isListEmpty
+                        // Show loading spinner during initial load or refresh.
+                        progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                        // Show the retry state if initial load or refresh fails.
+//                        viewEmpty.btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+
+                        // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+                        val errorState = loadState.source.append as? LoadState.Error
+                            ?: loadState.source.prepend as? LoadState.Error
+                            ?: loadState.append as? LoadState.Error
+                            ?: loadState.prepend as? LoadState.Error
+                            ?: loadState.source.refresh as? LoadState.Error
+
+                        errorState?.let {
+                            viewEmpty.tvError.text = it.error.localizedMessage
+                        }
+                    }
+                }
             }
         }
     }

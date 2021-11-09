@@ -19,6 +19,6 @@ class LibraryViewModel @Inject constructor(private val useCase: GameUseCase) : V
     init {
         pagingDataFlow = getGameLibraries().cachedIn(viewModelScope)
     }
-    private fun getGameLibraries() = useCase.getGameLibraries()
 
+    private fun getGameLibraries() = useCase.getGameLibraries()
 }

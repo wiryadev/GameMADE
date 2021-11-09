@@ -28,8 +28,6 @@ import com.wiryadev.gamemade.core.ui.GameAdapter
 import com.wiryadev.gamemade.core.ui.GameLoadStateAdapter
 import com.wiryadev.gamemade.core.utils.Constant
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
-import com.wiryadev.gamemade.core.utils.gone
-import com.wiryadev.gamemade.core.utils.visible
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -90,7 +88,7 @@ class SearchFragment : Fragment() {
         with(binding?.rvSearch) {
             this?.layoutManager = LinearLayoutManager(context)
             this?.adapter = gameAdapter.withLoadStateFooter(
-                GameLoadStateAdapter { gameAdapter }
+                GameLoadStateAdapter { gameAdapter.retry() }
             )
         }
 
@@ -112,13 +110,9 @@ class SearchFragment : Fragment() {
                         s?.let { viewModel.queryChannel.value = it.toString() }
                     }
                 }
-//                    search?.let {
-//                        if (it.trim().isNotEmpty()) {
-//                            binding?.updateSearchResult(it, viewModel.accept)
-//                        }
-//                    }
 
             })
+
             setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     binding?.updateSearchResult(viewModel.accept)
@@ -129,22 +123,9 @@ class SearchFragment : Fragment() {
             }
         }
 
-        viewModel.searchResult.observe(viewLifecycleOwner) { item ->
-            val searchRecommendation = arrayListOf<String>()
-            item.map {
-                searchRecommendation.add(it.title)
-            }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.select_dialog_item,
-                searchRecommendation
-            )
-            adapter.notifyDataSetChanged()
-            binding?.tvSearchGame?.setAdapter(adapter)
-        }
-
         binding?.observeData(
             uiState = viewModel.state,
+            suggestionData = viewModel.searchResult,
             pagingData = viewModel.pagingDataFlow,
             onScrollChanged = viewModel.accept,
         )
@@ -168,6 +149,7 @@ class SearchFragment : Fragment() {
 
     private fun FragmentSearchBinding.observeData(
         uiState: StateFlow<UiState>,
+        suggestionData: Flow<List<Game>>,
         pagingData: Flow<PagingData<Game>>,
         onScrollChanged: (UiAction.Scroll) -> Unit,
     ) {
@@ -198,23 +180,41 @@ class SearchFragment : Fragment() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    suggestionData.collectLatest { item ->
+                        if (item.isNotEmpty()) {
+                            val searchSuggestion = item.map { it.title }
+                            val adapter = ArrayAdapter(
+                                requireContext(),
+                                android.R.layout.select_dialog_item,
+                                searchSuggestion
+                            )
+                            adapter.notifyDataSetChanged()
+                            binding?.tvSearchGame?.setAdapter(adapter)
+                        }
+                    }
+                }
+                launch {
                     pagingData.collectLatest(
                         gameAdapter::submitData
                     )
                 }
 
                 launch {
+                    shouldScrollToTop.collect { shouldScroll ->
+                        if (shouldScroll) rvSearch.scrollToPosition(0)
+                    }
+                }
+
+                launch {
                     gameAdapter.loadStateFlow.collect { loadState ->
-                        val isListEmpty =
-                            loadState.refresh is LoadState.NotLoading && gameAdapter.itemCount == 0
-                        // show empty list
-                        viewError.root.isVisible = isListEmpty
+                        val isListEmpty = loadState.refresh is LoadState.NotLoading
+                                && gameAdapter.itemCount == 0
                         // Only show the list if refresh succeeds.
                         rvSearch.isVisible = !isListEmpty
                         // Show loading spinner during initial load or refresh.
                         progressBar.isVisible = loadState.source.refresh is LoadState.Loading
                         // Show the retry state if initial load or refresh fails.
-                        viewError.btnRetry.isVisible = loadState.source.refresh is LoadState.Error
+                        viewError.root.isVisible = loadState.source.refresh is LoadState.Error
 
                         // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
                         val errorState = loadState.source.append as? LoadState.Error
@@ -230,12 +230,6 @@ class SearchFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun handleLoadingView() {
-        binding?.progressBar?.visible()
-        binding?.viewError?.root?.gone()
-        binding?.rvSearch?.gone()
     }
 
 }

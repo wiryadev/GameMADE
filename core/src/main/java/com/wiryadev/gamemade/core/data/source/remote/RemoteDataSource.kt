@@ -19,10 +19,8 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     suspend fun getSearchResults(page: Int, pageSize: Int, query: String): ListGameResponse =
         apiService.getGameList(page, pageSize, query)
 
-    suspend fun searchGame(search: String): Flow<List<GameResponse>> =
-        flow<List<GameResponse>> {
-            apiService.searchGame(search).results
-        }.flowOn(Dispatchers.IO)
+    suspend fun searchGame(search: String): List<GameResponse> =
+        apiService.searchGame(search).results
 
     suspend fun getDetailGame(id: Int): Flow<ApiResponse<GameResponse>> =
         flow {

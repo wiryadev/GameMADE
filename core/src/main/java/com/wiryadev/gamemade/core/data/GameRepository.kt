@@ -4,15 +4,14 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.wiryadev.gamemade.core.data.source.local.GameLocalPagingSource
-import com.wiryadev.gamemade.core.data.source.remote.GameRemotePagingSource
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
+import com.wiryadev.gamemade.core.data.source.remote.GameRemotePagingSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import com.wiryadev.gamemade.core.utils.DataMapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,7 +47,7 @@ class GameRepository @Inject constructor(
     }
 
     override suspend fun searchGame(search: String): List<Game> {
-        return DataMapper.mapResponseToDomain(remoteDataSource.searchGame(search).first())
+        return DataMapper.mapResponseToDomain(remoteDataSource.searchGame(search))
     }
 
     override fun getGameLibraries(): Flow<PagingData<Game>> {

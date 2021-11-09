@@ -33,19 +33,16 @@ class SearchViewModel @Inject constructor(
 
     val accept: (UiAction) -> Unit
 
-    private var debounceDuration = 0
-
     val queryChannel = MutableStateFlow("")
 
     val searchResult = queryChannel
-        .debounce(debounceDuration.toLong())
+        .debounce(300)
         .filter {
             it.trim().isNotEmpty()
         }
         .mapLatest {
             useCase.searchGame(it)
         }
-        .asLiveData(viewModelScope.coroutineContext)
 
     init {
         val initialQuery = savedStateHandle.get<String>(LAST_SEARCH_QUERY)
@@ -101,10 +98,6 @@ class SearchViewModel @Inject constructor(
                 actionStateFlow.emit(action)
             }
         }
-    }
-
-    fun setDebounceDuration(needDebounce: Boolean) {
-        debounceDuration = if (needDebounce) 300 else 0
     }
 
     private fun getSearchResults(query: String) = useCase.getSearchResults(query)

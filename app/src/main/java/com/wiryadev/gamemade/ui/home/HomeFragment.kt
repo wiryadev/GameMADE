@@ -123,6 +123,10 @@ class HomeFragment : Fragment() {
                         // Show the retry state if initial load or refresh fails.
                         viewError.btnRetry.isVisible = loadState.source.refresh is LoadState.Error
 
+                        viewError.btnRetry.setOnClickListener {
+                            gameAdapter.retry()
+                        }
+
                         // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
                         val errorState = loadState.source.append as? LoadState.Error
                             ?: loadState.source.prepend as? LoadState.Error
