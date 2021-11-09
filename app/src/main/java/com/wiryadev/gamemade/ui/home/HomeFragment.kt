@@ -2,6 +2,7 @@ package com.wiryadev.gamemade.ui.home
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.ui.GameAdapter
+import com.wiryadev.gamemade.core.ui.GameLoadStateAdapter
 import com.wiryadev.gamemade.core.utils.Constant
 import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.databinding.FragmentHomeBinding
@@ -79,8 +81,9 @@ class HomeFragment : Fragment() {
 
         with(binding?.rvGame) {
             this?.layoutManager = LinearLayoutManager(context)
-            this?.adapter = gameAdapter
-            this?.setHasFixedSize(true)
+            this?.adapter = gameAdapter.withLoadStateFooter(
+                GameLoadStateAdapter { gameAdapter.retry() }
+            )
         }
 
         binding?.observeData(pagingData = viewModel.pagingDataFlow)
@@ -97,24 +100,23 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun FragmentHomeBinding.observeData(
-        pagingData: Flow<PagingData<Game>>
-    ) {
+    private fun FragmentHomeBinding.observeData(pagingData: Flow<PagingData<Game>>) {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    pagingData.collectLatest(
-                        gameAdapter::submitData
-                    )
+                    Log.d("Home", "observeData: first launch executed")
+                    pagingData.collectLatest(gameAdapter::submitData)
                 }
 
                 launch {
+                    Log.d("Home", "observeData: second launch executed")
                     gameAdapter.loadStateFlow.collect { loadState ->
-                        val isListEmpty =
-                            loadState.refresh is LoadState.NotLoading && gameAdapter.itemCount == 0
+                        val isListEmpty = loadState.refresh is LoadState.NotLoading
+                                && gameAdapter.itemCount == 0
                         // show empty list
-                        viewError.root.isVisible = isListEmpty
+                        viewError.root.isVisible = loadState.refresh is LoadState.Error
                         // Only show the list if refresh succeeds.
+                        Log.d("Home", "loadState: ${loadState.refresh}, itemCount: ${gameAdapter.itemCount}, isListEmpty: $isListEmpty")
                         rvGame.isVisible = !isListEmpty
                         // Show loading spinner during initial load or refresh.
                         progressBar.isVisible = loadState.source.refresh is LoadState.Loading
@@ -128,7 +130,10 @@ class HomeFragment : Fragment() {
                             ?: loadState.prepend as? LoadState.Error
                             ?: loadState.source.refresh as? LoadState.Error
 
+                        Log.d("Error", "observeData: $loadState")
+
                         errorState?.let {
+                            Log.d("Error", "observeData: ${it.error}")
                             viewError.tvError.text = it.error.localizedMessage
                         }
                     }

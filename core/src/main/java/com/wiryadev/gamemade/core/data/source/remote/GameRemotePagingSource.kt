@@ -1,18 +1,18 @@
-package com.wiryadev.gamemade.core.data.source
+package com.wiryadev.gamemade.core.data.source.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.wiryadev.gamemade.core.data.GameRepository.Companion.NETWORK_PAGE_SIZE
+import com.wiryadev.gamemade.core.data.GameRepository.Companion.STARTING_PAGE_INDEX
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.DataMapper
 import retrofit2.HttpException
 import java.io.IOException
 
-private const val STARTING_PAGE_INDEX = 1
-
-class GamePagingSource(
-    private val remoteDataSource: RemoteDataSource
+class GameRemotePagingSource(
+    private val remoteDataSource: RemoteDataSource,
+    private val query: String? = null
 ) : PagingSource<Int, Game>() {
     override fun getRefreshKey(state: PagingState<Int, Game>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -25,7 +25,11 @@ class GamePagingSource(
         val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
-            val response = remoteDataSource.getGameList(position, params.loadSize)
+            val response = if (query.isNullOrEmpty()) {
+                remoteDataSource.getGameList(position, params.loadSize)
+            } else {
+                remoteDataSource.getSearchResults(position, params.loadSize, query)
+            }
             val games = DataMapper.mapResponseToDomain(response.results)
 
             val prevKey = if (position == STARTING_PAGE_INDEX) null else (position - 1)

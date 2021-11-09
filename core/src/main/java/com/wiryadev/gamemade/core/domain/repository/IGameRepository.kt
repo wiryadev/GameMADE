@@ -9,9 +9,11 @@ interface IGameRepository {
 
     fun getGameList(): Flow<PagingData<Game>>
 
-    suspend fun searchGame(search: String): Resource<List<Game>>
+    fun getSearchResults(query: String): Flow<PagingData<Game>>
 
-    fun getGameLibraries(): Flow<List<Game>>
+    suspend fun searchGame(search: String): List<Game>
+
+    fun getGameLibraries(): Flow<PagingData<Game>>
 
     suspend fun getDetailGame(id: Int): Flow<Resource<Game>>
 

@@ -5,18 +5,16 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.imageLoader
 import coil.load
-import coil.transform.RoundedCornersTransformation
-import com.wiryadev.gamemade.core.R
+import coil.request.ImageRequest
+import coil.size.ViewSizeResolver
 import com.wiryadev.gamemade.core.databinding.ItemGameBinding
 import com.wiryadev.gamemade.core.domain.model.Game
-import com.wiryadev.gamemade.core.utils.Constant.Companion.CORNER_RADIUS
 import com.wiryadev.gamemade.core.utils.Constant.Companion.NONE
 import com.wiryadev.gamemade.core.utils.Constant.Companion.TBA
 
 class GameAdapter : PagingDataAdapter<Game, GameAdapter.RecyclerViewHolder>(DIFF_CALLBACK) {
-
-    private var listData = ArrayList<Game>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
         val itemGameBinding =
@@ -29,22 +27,21 @@ class GameAdapter : PagingDataAdapter<Game, GameAdapter.RecyclerViewHolder>(DIFF
         item?.let { holder.bind(it) }
     }
 
-    override fun getItemCount(): Int = listData.size
-
     inner class RecyclerViewHolder(
         private val binding: ItemGameBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-
-        }
         fun bind(data: Game) {
             with(binding) {
-                ivPoster.load(data.bgImage) {
-                    transformations(RoundedCornersTransformation(CORNER_RADIUS))
-                    placeholder(R.drawable.ic_paceholder)
-                    error(R.drawable.ic_error)
-                }
+                val request = ImageRequest.Builder(this.root.context)
+                    .size(ViewSizeResolver(ivPoster))
+                    .build()
+                val loader = this.root.context.imageLoader
+                loader.enqueue(request)
+                ivPoster.load(
+                    uri = data.bgImage,
+                    imageLoader = loader,
+                )
 
                 tvTitle.text = data.title
 

@@ -13,22 +13,15 @@ import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
 
-    suspend fun getGameList(page: Int, pageSize: Int): ListGameResponse = apiService.getGameList(page, pageSize)
+    suspend fun getGameList(page: Int, pageSize: Int): ListGameResponse =
+        apiService.getGameList(page, pageSize)
 
-    suspend fun searchGame(search: String): Flow<ApiResponse<List<GameResponse>>> =
-        flow {
-            try {
-                val response = apiService.searchGame(search)
-                val data = response.results
-                if (response.count > 0) {
-                    emit(ApiResponse.Success(data))
-                } else {
-                    emit(ApiResponse.Empty(EMPTY))
-                }
-            } catch (ex: Exception) {
-                emit(ApiResponse.Error(ex.message.toString()))
-                Log.e(TAG, "getGameList: ${ex.message} ")
-            }
+    suspend fun getSearchResults(page: Int, pageSize: Int, query: String): ListGameResponse =
+        apiService.getGameList(page, pageSize, query)
+
+    suspend fun searchGame(search: String): Flow<List<GameResponse>> =
+        flow<List<GameResponse>> {
+            apiService.searchGame(search).results
         }.flowOn(Dispatchers.IO)
 
     suspend fun getDetailGame(id: Int): Flow<ApiResponse<GameResponse>> =

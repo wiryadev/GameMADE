@@ -3,7 +3,8 @@ package com.wiryadev.gamemade.core.data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.wiryadev.gamemade.core.data.source.GamePagingSource
+import com.wiryadev.gamemade.core.data.source.local.GameLocalPagingSource
+import com.wiryadev.gamemade.core.data.source.remote.GameRemotePagingSource
 import com.wiryadev.gamemade.core.data.source.local.LocalDataSource
 import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.data.source.remote.network.ApiResponse
@@ -29,30 +30,37 @@ class GameRepository @Inject constructor(
                 enablePlaceholders = false,
             ),
             pagingSourceFactory = {
-                GamePagingSource(remoteDataSource)
+                GameRemotePagingSource(remoteDataSource)
             }
         ).flow
     }
 
-    override suspend fun searchGame(search: String): Resource<List<Game>> {
-        return when (val apiResponse = remoteDataSource.searchGame(search).first()) {
-            is ApiResponse.Success -> {
-                val result = DataMapper.mapResponseToDomain(apiResponse.data)
-                Resource.Success(result)
+    override fun getSearchResults(query: String): Flow<PagingData<Game>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                GameRemotePagingSource(remoteDataSource, query)
             }
-            is ApiResponse.Empty -> {
-                Resource.Error(apiResponse.message)
-            }
-            is ApiResponse.Error -> {
-                Resource.Error(apiResponse.errorMessage)
-            }
-        }
+        ).flow
     }
 
-    override fun getGameLibraries(): Flow<List<Game>> {
-        return localDataSource.getGameLibraries().map {
-            DataMapper.mapEntitiesToDomain(it)
-        }
+    override suspend fun searchGame(search: String): List<Game> {
+        return DataMapper.mapResponseToDomain(remoteDataSource.searchGame(search).first())
+    }
+
+    override fun getGameLibraries(): Flow<PagingData<Game>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = false,
+            ),
+            pagingSourceFactory = {
+                GameLocalPagingSource(localDataSource)
+            }
+        ).flow
     }
 
     override suspend fun getDetailGame(id: Int): Flow<Resource<Game>> {
@@ -82,6 +90,7 @@ class GameRepository @Inject constructor(
     }
 
     companion object {
+        const val STARTING_PAGE_INDEX = 1
         const val NETWORK_PAGE_SIZE = 20
     }
 }

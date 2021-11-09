@@ -1,5 +1,6 @@
 package com.wiryadev.gamemade.core.domain.usecase
 
+import androidx.paging.PagingData
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.domain.repository.IGameRepository
 import kotlinx.coroutines.flow.Flow
@@ -9,9 +10,11 @@ class GameInteractor @Inject constructor(private val gameRepository: IGameReposi
 
     override fun getGameList() = gameRepository.getGameList()
 
+    override fun getSearchResults(query: String) = gameRepository.getSearchResults(query)
+
     override suspend fun searchGame(search: String) = gameRepository.searchGame(search)
 
-    override fun getGameLibraries(): Flow<List<Game>> = gameRepository.getGameLibraries()
+    override fun getGameLibraries(): Flow<PagingData<Game>> = gameRepository.getGameLibraries()
 
     override suspend fun getDetailGame(id: Int) = gameRepository.getDetailGame(id)
 

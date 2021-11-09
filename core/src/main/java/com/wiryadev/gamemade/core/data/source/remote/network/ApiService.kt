@@ -12,6 +12,8 @@ interface ApiService {
     suspend fun getGameList(
         @Query("page") page: Int,
         @Query("page_size") pageSize: Int,
+        @Query("search") search: String? = null,
+        @Query("search_precise") searchPrecise: Boolean = true
     ): ListGameResponse
 
     @GET("games")

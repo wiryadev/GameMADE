@@ -12,7 +12,7 @@ class LocalDataSource @Inject constructor(private val dao: GameDao) {
 
     fun getAllCachedGame(): Flow<List<GameCacheEntity>> = dao.getAllCachedGame()
 
-    fun getGameLibraries(): Flow<List<GameEntity>> = dao.getGameLibraries()
+    fun getGameLibraries(): List<GameEntity> = dao.getGameLibraries()
 
     fun checkFavorite(id: Int): Flow<Int> = dao.checkFavorite(id)
 

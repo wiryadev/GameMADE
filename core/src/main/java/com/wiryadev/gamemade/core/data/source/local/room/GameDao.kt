@@ -1,8 +1,10 @@
 package com.wiryadev.gamemade.core.data.source.local.room
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.wiryadev.gamemade.core.data.source.local.entity.GameCacheEntity
 import com.wiryadev.gamemade.core.data.source.local.entity.GameEntity
+import com.wiryadev.gamemade.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow
 
 
@@ -12,7 +14,8 @@ interface GameDao {
     fun getAllCachedGame(): Flow<List<GameCacheEntity>>
 
     @Query("SELECT * FROM tblGameLibraries")
-    fun getGameLibraries(): Flow<List<GameEntity>>
+    fun getGameLibraries(): List<GameEntity>
+//    fun getGameLibraries(): Flow<List<GameEntity>>
 
     @Query("SELECT EXISTS (SELECT 1 FROM tblGameLibraries WHERE id=:id)")
     fun checkFavorite(id: Int): Flow<Int>
