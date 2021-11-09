@@ -70,6 +70,19 @@ object DataMapper {
         }
     }
 
+    fun mapEntityToDomain(entity: GameEntity): Game {
+        return Game(
+            id = entity.id,
+            title = entity.title,
+            released = entity.released,
+            metacritic = entity.metacritic,
+            metacriticUrl = entity.metacriticUrl,
+            bgImage = entity.bgImage,
+            gameSeriesCount = entity.gameSeriesCount
+        )
+
+    }
+
     fun mapDomainToEntity(input: Game): GameEntity {
         return GameEntity(
             id = input.id,
