@@ -13,9 +13,8 @@ interface GameDao {
     @Query("SELECT * FROM tblGameCaches")
     fun getAllCachedGame(): Flow<List<GameCacheEntity>>
 
-    @Query("SELECT * FROM tblGameLibraries")
-    fun getGameLibraries(): List<GameEntity>
-//    fun getGameLibraries(): Flow<List<GameEntity>>
+    @Query("SELECT * FROM tblGameLibraries LIMIT :size")
+    suspend fun getGameLibraries(size: Int): List<GameEntity>
 
     @Query("SELECT EXISTS (SELECT 1 FROM tblGameLibraries WHERE id=:id)")
     fun checkFavorite(id: Int): Flow<Int>

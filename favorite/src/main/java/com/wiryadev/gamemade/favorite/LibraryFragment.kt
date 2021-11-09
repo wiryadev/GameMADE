@@ -98,7 +98,6 @@ class LibraryFragment : Fragment() {
             adapter = gameAdapter.withLoadStateFooter(
                 GameLoadStateAdapter { gameAdapter.retry() }
             )
-            setHasFixedSize(true)
         }
 
         binding?.observeData(viewModel.pagingDataFlow)

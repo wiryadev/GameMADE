@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.wiryadev.gamemade.core.data.GameRepository.Companion.NETWORK_PAGE_SIZE
 import com.wiryadev.gamemade.core.data.GameRepository.Companion.STARTING_PAGE_INDEX
-import com.wiryadev.gamemade.core.data.source.remote.RemoteDataSource
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.utils.DataMapper
 import retrofit2.HttpException
@@ -47,9 +46,9 @@ class GameRemotePagingSource(
                 nextKey = nextKey
             )
         } catch (exception: IOException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
         }
     }
 }
