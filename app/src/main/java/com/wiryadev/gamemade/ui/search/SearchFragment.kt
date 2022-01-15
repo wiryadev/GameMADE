@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -21,13 +21,10 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialElevationScale
-import com.google.android.material.transition.MaterialFadeThrough
 import com.wiryadev.gamemade.core.domain.model.Game
 import com.wiryadev.gamemade.core.ui.GameAdapter
 import com.wiryadev.gamemade.core.ui.GameLoadStateAdapter
 import com.wiryadev.gamemade.core.utils.Constant
-import com.wiryadev.gamemade.core.utils.Constant.Companion.DELAY_TRANSITION
 import com.wiryadev.gamemade.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,23 +40,11 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding
 
-    private val viewModel: SearchViewModel by activityViewModels()
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var gameAdapter: GameAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        enterTransition = MaterialFadeThrough().apply {
-            duration = DELAY_TRANSITION
-        }
-
-        exitTransition = MaterialElevationScale(false).apply {
-            duration = DELAY_TRANSITION
-        }
-
-        reenterTransition = MaterialElevationScale(true).apply {
-            duration = DELAY_TRANSITION
-        }
 
         gameAdapter = GameAdapter()
 
