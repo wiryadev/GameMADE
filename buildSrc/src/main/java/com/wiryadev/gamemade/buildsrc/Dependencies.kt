@@ -3,7 +3,7 @@ package com.wiryadev.gamemade.buildsrc
 object Libs {
     object AndroidX {
         const val coreKtx = "androidx.core:core-ktx:1.7.0"
-        const val appCompat = "androidx.appcompat:appcompat:1.3.1"
+        const val appCompat = "androidx.appcompat:appcompat:1.4.1"
         const val multidex = "androidx.multidex:multidex:2.0.1"
         const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
@@ -12,7 +12,7 @@ object Libs {
             const val recyclerView = "androidx.recyclerview:recyclerview:1.2.1"
             const val material = "com.google.android.material:material:1.4.0"
             const val coil = "io.coil-kt:coil:1.4.0"
-            const val lottie = "com.airbnb.android:lottie:4.1.0"
+            const val lottie = "com.airbnb.android:lottie:4.2.1"
             const val shimmer = "com.facebook.shimmer:shimmer:0.5.0"
         }
 
@@ -24,7 +24,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.5.2"
+        private const val version = "1.6.0"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     }
@@ -34,11 +34,11 @@ object Libs {
         const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
         const val livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
         const val activityKtx = "androidx.activity:activity-ktx:1.4.0"
-        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.3.6"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.4.0"
     }
 
     object Hilt {
-        private const val version = "2.40"
+        private const val version = "2.40.5"
         const val android = "com.google.dagger:hilt-android:$version"
         const val compiler = "com.google.dagger:hilt-compiler:$version"
     }
@@ -49,12 +49,12 @@ object Libs {
         const val gsonConverter = "com.squareup.retrofit2:converter-gson:$version"
 
         object OkHttp {
-            const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.1"
+            const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
         }
     }
 
     object Room {
-        private const val version = "2.3.0"
+        private const val version = "2.4.1"
         const val ktx = "androidx.room:room-ktx:$version"
         const val runtime = "androidx.room:room-runtime:$version"
         const val compiler = "androidx.room:room-compiler:$version"
@@ -62,12 +62,12 @@ object Libs {
 
         object Security {
             const val sqliteKtx = "androidx.sqlite:sqlite-ktx:2.1.0"
-            const val sqlCipher = "net.zetetic:android-database-sqlcipher:4.4.3"
+            const val sqlCipher = "net.zetetic:android-database-sqlcipher:4.5.0"
         }
     }
 
     object Paging {
-        private const val version = "3.0.1"
+        private const val version = "3.1.0"
         const val paging = "androidx.paging:paging-runtime-ktx:$version"
     }
 
